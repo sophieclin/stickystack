@@ -1,6 +1,7 @@
 import { Environment } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { PCFSoftShadowMap } from "three";
+import { Suspense } from "react";
+import { PCFShadowMap } from "three";
 import type { Note, Week } from "../types/domain";
 import { SpikeAssembly } from "./SpikeAssembly";
 
@@ -19,7 +20,7 @@ export function StackScene({
 }) {
   return (
     <Canvas
-      shadows={{ type: PCFSoftShadowMap }}
+      shadows={{ type: PCFShadowMap }}
       dpr={[1, 2]}
       camera={{ position: [0, 1.15, 2.5], fov: 32 }}
       onCreated={({ camera }) => camera.lookAt(0, 0.55, 0)}
@@ -38,7 +39,9 @@ export function StackScene({
         shadow-camera-top={0.7}
         shadow-camera-bottom={-0.7}
       />
-      <Environment preset="apartment" environmentIntensity={0.4} />
+      <Suspense fallback={null}>
+        <Environment preset="apartment" environmentIntensity={0.4} />
+      </Suspense>
       <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[20, 20]} />
         <shadowMaterial opacity={0.25} />

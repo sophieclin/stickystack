@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import type { Group } from "three";
 import type { Note, Week } from "../types/domain";
 import { useStackImpulse } from "./animation/useStackImpulse";
@@ -26,14 +26,16 @@ export function SpikeAssembly({
     <group ref={groupRef}>
       <Base />
       <Spike />
-      <NotesStack
-        notes={notes}
-        isLoading={isLoading}
-        weeksById={weeksById}
-        fontUrl={fontUrl}
-        onNoteLanded={triggerImpulse}
-        onCompleteNote={onCompleteNote}
-      />
+      <Suspense fallback={null}>
+        <NotesStack
+          notes={notes}
+          isLoading={isLoading}
+          weeksById={weeksById}
+          fontUrl={fontUrl}
+          onNoteLanded={triggerImpulse}
+          onCompleteNote={onCompleteNote}
+        />
+      </Suspense>
     </group>
   );
 }
