@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
 
 export function useCompleteNote() {
-  const { session } = useAuth();
-  const userId = session?.user.id;
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -15,6 +12,6 @@ export function useCompleteNote() {
         .eq("id", noteId);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes", userId] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }),
   });
 }

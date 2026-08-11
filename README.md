@@ -1,7 +1,8 @@
 # StickyStack
 
-A 3D sticky-note task tracker: write tasks on colored sticky notes and spear them onto a virtual
-receipt-spike, one color per week.
+A 3D sticky-note task tracker. Add tasks to a To-Do sidebar (one sticky-note color per week),
+edit them inline, and mark them done to spear them onto a virtual receipt-spike — a running,
+color-coded record of what you've finished.
 
 ## Setup
 

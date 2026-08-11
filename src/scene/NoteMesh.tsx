@@ -1,5 +1,5 @@
-import { Text, useCursor } from "@react-three/drei";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Text } from "@react-three/drei";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { DoubleSide, type Group } from "three";
 import type { Note } from "../types/domain";
 import { useSpearAndSettle } from "./animation/useSpearAndSettle";
@@ -17,7 +17,6 @@ export function NoteMesh({
   onEntered,
   onExited,
   onLanded,
-  onComplete,
 }: {
   note: Note;
   phase: NotePhase;
@@ -26,12 +25,8 @@ export function NoteMesh({
   onEntered: () => void;
   onExited: () => void;
   onLanded?: () => void;
-  onComplete: () => void;
 }) {
   const groupRef = useRef<Group>(null);
-  const [hovered, setHovered] = useState(false);
-  const clickable = phase === "idle";
-  useCursor(hovered && clickable);
 
   const { position, quaternion } = useMemo(
     () => computeNoteTransform(note.id, note.stack_position),
@@ -66,31 +61,8 @@ export function NoteMesh({
 
   return (
     <group ref={groupRef}>
-      <mesh
-        geometry={curledNoteGeometry}
-        castShadow
-        receiveShadow
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          if (clickable) setHovered(true);
-        }}
-        onPointerOut={(e) => {
-          e.stopPropagation();
-          setHovered(false);
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (clickable) onComplete();
-        }}
-      >
-        <meshStandardMaterial
-          color={color}
-          roughness={0.88}
-          metalness={0}
-          side={DoubleSide}
-          emissive={hovered && clickable ? "#3a2410" : "#000000"}
-          emissiveIntensity={hovered && clickable ? 0.35 : 0}
-        />
+      <mesh geometry={curledNoteGeometry} castShadow receiveShadow>
+        <meshStandardMaterial color={color} roughness={0.88} metalness={0} side={DoubleSide} />
       </mesh>
       <Text
         position={[NOTE_CENTER_OFFSET, 0.007, -NOTE_CENTER_OFFSET]}

@@ -10,13 +10,11 @@ export function StackScene({
   isLoading,
   weeksById,
   fontUrl,
-  onCompleteNote,
 }: {
   notes: Note[];
   isLoading: boolean;
   weeksById: Map<string, Week>;
   fontUrl: string;
-  onCompleteNote: (id: string) => void;
 }) {
   return (
     <Canvas
@@ -46,13 +44,7 @@ export function StackScene({
         <planeGeometry args={[20, 20]} />
         <shadowMaterial opacity={0.25} />
       </mesh>
-      <SpikeAssembly
-        notes={notes}
-        isLoading={isLoading}
-        weeksById={weeksById}
-        fontUrl={fontUrl}
-        onCompleteNote={onCompleteNote}
-      />
+      <SpikeAssembly notes={notes} isLoading={isLoading} weeksById={weeksById} fontUrl={fontUrl} />
     </Canvas>
   );
 }

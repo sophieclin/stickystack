@@ -8,11 +8,16 @@ export function useAddNote() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ weekId, text }: { weekId: string; text: string }) => {
+    mutationFn: async ({ weekId, text = "New task" }: { weekId: string; text?: string }) => {
       if (!userId) throw new Error("Not authenticated");
-      const { error } = await supabase.from("notes").insert({ user_id: userId, week_id: weekId, text });
+      const { data, error } = await supabase
+        .from("notes")
+        .insert({ user_id: userId, week_id: weekId, text })
+        .select()
+        .single();
       if (error) throw error;
+      return data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes", userId] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }),
   });
 }

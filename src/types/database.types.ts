@@ -45,6 +45,7 @@ export type Database = {
           text: string;
         };
         Update: {
+          text?: string;
           status?: NoteStatus;
           completed_at?: string | null;
         };

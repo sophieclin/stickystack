@@ -11,13 +11,11 @@ export function SpikeAssembly({
   isLoading,
   weeksById,
   fontUrl,
-  onCompleteNote,
 }: {
   notes: Note[];
   isLoading: boolean;
   weeksById: Map<string, Week>;
   fontUrl: string;
-  onCompleteNote: (id: string) => void;
 }) {
   const groupRef = useRef<Group>(null);
   const triggerImpulse = useStackImpulse(groupRef);
@@ -33,7 +31,6 @@ export function SpikeAssembly({
           weeksById={weeksById}
           fontUrl={fontUrl}
           onNoteLanded={triggerImpulse}
-          onCompleteNote={onCompleteNote}
         />
       </Suspense>
     </group>

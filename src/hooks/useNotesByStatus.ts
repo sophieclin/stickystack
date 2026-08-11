@@ -3,12 +3,12 @@ import { useMemo } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { isWeekArchived } from "../lib/dates";
 import { supabase } from "../lib/supabaseClient";
-import type { Note } from "../types/domain";
+import type { Note, NoteStatus } from "../types/domain";
 import { useUserSettings } from "./useUserSettings";
 import { useWeeks } from "./useWeeks";
 
-/** Active notes across all non-archived weeks, ordered by their global pierce order. */
-export function useNotes() {
+/** Notes of a given status across all non-archived weeks, ordered by global pierce order. */
+export function useNotesByStatus(status: NoteStatus) {
   const { session } = useAuth();
   const userId = session?.user.id;
   const weeksQuery = useWeeks();
@@ -22,13 +22,13 @@ export function useNotes() {
   }, [weeksQuery.data, settingsQuery.data]);
 
   const notesQuery = useQuery({
-    queryKey: ["notes", userId, activeWeekIds],
+    queryKey: ["notes", status, userId, activeWeekIds],
     queryFn: async (): Promise<Note[]> => {
       const { data, error } = await supabase
         .from("notes")
         .select("*")
         .in("week_id", activeWeekIds)
-        .eq("status", "active")
+        .eq("status", status)
         .order("stack_position", { ascending: true });
       if (error) throw error;
       return data;

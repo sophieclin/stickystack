@@ -15,14 +15,12 @@ export function NotesStack({
   weeksById,
   fontUrl,
   onNoteLanded,
-  onCompleteNote,
 }: {
   notes: Note[];
   isLoading: boolean;
   weeksById: Map<string, Week>;
   fontUrl: string;
   onNoteLanded?: () => void;
-  onCompleteNote: (id: string) => void;
 }) {
   const [tracked, setTracked] = useState<Map<string, TrackedNote>>(new Map());
   const hasInitialized = useRef(false);
@@ -86,7 +84,6 @@ export function NotesStack({
           onEntered={() => handleEntered(note.id)}
           onExited={() => handleExited(note.id)}
           onLanded={onNoteLanded}
-          onComplete={() => onCompleteNote(note.id)}
         />
       ))}
     </>
