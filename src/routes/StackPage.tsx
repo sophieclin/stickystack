@@ -17,6 +17,8 @@ import { StackScene } from "../scene/StackScene";
 
 export function StackPage() {
   const { session } = useAuth();
+  const username = (session?.user.user_metadata as { username?: string } | undefined)?.username;
+  const displayName = username || session?.user.email;
   const { week, isLoading: weekLoading, setColor } = useCurrentWeek();
   const { notes: activeNotes } = useActiveNotes();
   const { notes: doneNotes, isLoading: doneNotesLoading } = useDoneNotes();
@@ -42,7 +44,7 @@ export function StackPage() {
       <header className="stack-header">
         <h1>StickyStack</h1>
         <div className="stack-header-right">
-          <span className="stack-header-email">{session?.user.email}</span>
+          <span className="stack-header-greeting">Hi, {displayName}</span>
           <Link to="/settings">Settings</Link>
           <button type="button" onClick={() => supabase.auth.signOut()}>
             Log out

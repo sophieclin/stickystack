@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabaseClient";
 
 export function SignUpPage() {
   const { session } = useAuth();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +19,11 @@ export function SignUpPage() {
     setError(null);
     setInfo(null);
     setSubmitting(true);
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { username } },
+    });
     setSubmitting(false);
     if (error) {
       setError(error.message);
@@ -33,6 +38,18 @@ export function SignUpPage() {
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
         <h1>Sign up</h1>
+        <label>
+          Username
+          <input
+            type="text"
+            required
+            minLength={2}
+            maxLength={30}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+          />
+        </label>
         <label>
           Email
           <input
