@@ -7,6 +7,14 @@ export type NotePhase = "entering" | "idle" | "exiting";
 interface TrackedNote {
   note: Note;
   phase: NotePhase;
+  /**
+   * Rank within this pile (0 = bottom), not `note.stack_position` — that
+   * column is a global identity shared by every user's notes, so its raw
+   * value has arbitrary gaps and would float a pile's first note high above
+   * the base. Kept frozen once a note starts exiting so its animation
+   * doesn't jump.
+   */
+  pileIndex: number;
 }
 
 export function NotesStack({
@@ -32,18 +40,18 @@ export function NotesStack({
       const next = new Map(prev);
       const incomingIds = new Set(notes.map((n) => n.id));
 
-      for (const note of notes) {
+      notes.forEach((note, pileIndex) => {
         const existing = next.get(note.id);
         if (!existing) {
-          next.set(note.id, { note, phase: hasInitialized.current ? "entering" : "idle" });
+          next.set(note.id, { note, phase: hasInitialized.current ? "entering" : "idle", pileIndex });
         } else if (existing.phase !== "exiting") {
-          next.set(note.id, { note, phase: existing.phase });
+          next.set(note.id, { note, phase: existing.phase, pileIndex });
         }
-      }
+      });
 
       for (const [id, entry] of next) {
         if (!incomingIds.has(id) && entry.phase !== "exiting") {
-          next.set(id, { note: entry.note, phase: "exiting" });
+          next.set(id, { note: entry.note, phase: "exiting", pileIndex: entry.pileIndex });
         }
       }
 
@@ -74,11 +82,12 @@ export function NotesStack({
 
   return (
     <>
-      {Array.from(tracked.values()).map(({ note, phase }) => (
+      {Array.from(tracked.values()).map(({ note, phase, pileIndex }) => (
         <NoteMesh
           key={note.id}
           note={note}
           phase={phase}
+          pileIndex={pileIndex}
           color={weeksById.get(note.week_id)?.color ?? "#cccccc"}
           fontUrl={fontUrl}
           onEntered={() => handleEntered(note.id)}

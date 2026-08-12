@@ -13,7 +13,7 @@ export function SettingsPage() {
     <div className="settings-page">
       <header className="stack-header">
         <h1>Settings</h1>
-        <Link to="/">Back to stack</Link>
+        <Link to="/app">Back to stack</Link>
       </header>
 
       {isLoading || !settings ? (

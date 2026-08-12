@@ -1,27 +1,31 @@
-import { Environment } from "@react-three/drei";
+import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { PCFShadowMap } from "three";
 import type { Note, Week } from "../types/domain";
 import { SpikeAssembly } from "./SpikeAssembly";
 
+const ORBIT_TARGET: [number, number, number] = [0, 0.46, 0];
+
 export function StackScene({
   notes,
   isLoading,
   weeksById,
   fontUrl,
+  autoRotate = false,
 }: {
   notes: Note[];
   isLoading: boolean;
   weeksById: Map<string, Week>;
   fontUrl: string;
+  autoRotate?: boolean;
 }) {
   return (
     <Canvas
       shadows={{ type: PCFShadowMap }}
       dpr={[1, 2]}
-      camera={{ position: [0, 1.15, 2.5], fov: 32 }}
-      onCreated={({ camera }) => camera.lookAt(0, 0.55, 0)}
+      camera={{ position: [0, 1.02, 2.55], fov: 33 }}
+      onCreated={({ camera }) => camera.lookAt(...ORBIT_TARGET)}
     >
       <color attach="background" args={["#efece5"]} />
       <hemisphereLight args={["#fff7ec", "#4a4a55", 0.9]} />
@@ -45,6 +49,18 @@ export function StackScene({
         <shadowMaterial opacity={0.25} />
       </mesh>
       <SpikeAssembly notes={notes} isLoading={isLoading} weeksById={weeksById} fontUrl={fontUrl} />
+      <OrbitControls
+        target={ORBIT_TARGET}
+        enablePan={false}
+        minDistance={1.4}
+        maxDistance={4}
+        minPolarAngle={Math.PI / 8}
+        maxPolarAngle={Math.PI / 2.1}
+        enableDamping
+        dampingFactor={0.08}
+        autoRotate={autoRotate}
+        autoRotateSpeed={1.1}
+      />
     </Canvas>
   );
 }

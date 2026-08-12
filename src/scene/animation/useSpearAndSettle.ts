@@ -12,6 +12,7 @@ export function useSpearAndSettle({
   active,
   finalPosition,
   finalQuaternion,
+  finalScale,
   onLanded,
   onComplete,
 }: {
@@ -19,6 +20,7 @@ export function useSpearAndSettle({
   active: boolean;
   finalPosition: Vector3;
   finalQuaternion: Quaternion;
+  finalScale: number;
   onLanded?: () => void;
   onComplete: () => void;
 }) {
@@ -28,7 +30,7 @@ export function useSpearAndSettle({
     if (!group) return;
 
     group.quaternion.copy(finalQuaternion);
-    group.scale.setScalar(1);
+    group.scale.setScalar(finalScale);
     group.position.set(finalPosition.x, finalPosition.y + 0.9, finalPosition.z);
 
     const timeline = gsap.timeline({ onComplete });

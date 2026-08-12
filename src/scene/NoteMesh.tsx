@@ -12,6 +12,7 @@ import { computeNoteTransform } from "./transform/computeNoteTransform";
 export function NoteMesh({
   note,
   phase,
+  pileIndex,
   color,
   fontUrl,
   onEntered,
@@ -20,6 +21,7 @@ export function NoteMesh({
 }: {
   note: Note;
   phase: NotePhase;
+  pileIndex: number;
   color: string;
   fontUrl: string;
   onEntered: () => void;
@@ -28,9 +30,9 @@ export function NoteMesh({
 }) {
   const groupRef = useRef<Group>(null);
 
-  const { position, quaternion } = useMemo(
-    () => computeNoteTransform(note.id, note.stack_position),
-    [note.id, note.stack_position],
+  const { position, quaternion, scale } = useMemo(
+    () => computeNoteTransform(note.id, pileIndex),
+    [note.id, pileIndex],
   );
 
   useLayoutEffect(() => {
@@ -39,14 +41,15 @@ export function NoteMesh({
     if (!group) return;
     group.position.copy(position);
     group.quaternion.copy(quaternion);
-    group.scale.setScalar(1);
-  }, [phase, position, quaternion]);
+    group.scale.setScalar(scale);
+  }, [phase, position, quaternion, scale]);
 
   useSpearAndSettle({
     groupRef,
     active: phase === "entering",
     finalPosition: position,
     finalQuaternion: quaternion,
+    finalScale: scale,
     onLanded,
     onComplete: onEntered,
   });
@@ -56,6 +59,7 @@ export function NoteMesh({
     active: phase === "exiting",
     finalPosition: position,
     finalQuaternion: quaternion,
+    finalScale: scale,
     onComplete: onExited,
   });
 

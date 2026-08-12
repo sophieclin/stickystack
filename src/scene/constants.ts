@@ -9,6 +9,6 @@ export const SPIKE_ORIGIN_Y = BASE_HEIGHT / 2;
 
 export const NOTE_SIZE = 0.46;
 export const NOTE_PIVOT_INSET = 0.05;
-export const NOTE_HEIGHT_STEP = 0.011;
-export const NOTE_HEIGHT_JITTER = 0.006;
+export const NOTE_HEIGHT_STEP = 0.008;
+export const NOTE_HEIGHT_JITTER = 0.0025;
 export const NOTE_CURL_AMOUNT = 0.035;

@@ -12,12 +12,14 @@ export function useTornAway({
   active,
   finalPosition,
   finalQuaternion,
+  finalScale,
   onComplete,
 }: {
   groupRef: RefObject<Group | null>;
   active: boolean;
   finalPosition: Vector3;
   finalQuaternion: Quaternion;
+  finalScale: number;
   onComplete: () => void;
 }) {
   useLayoutEffect(() => {
@@ -27,7 +29,7 @@ export function useTornAway({
 
     group.position.copy(finalPosition);
     group.quaternion.copy(finalQuaternion);
-    group.scale.setScalar(1);
+    group.scale.setScalar(finalScale);
 
     const outward = new Vector3(1, 0, 0).applyQuaternion(finalQuaternion).setY(0).normalize();
 

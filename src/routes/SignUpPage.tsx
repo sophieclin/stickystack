@@ -11,7 +11,7 @@ export function SignUpPage() {
   const [info, setInfo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  if (session) return <Navigate to="/" replace />;
+  if (session) return <Navigate to="/app" replace />;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
