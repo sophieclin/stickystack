@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
+import { SiteNav } from "../components/SiteNav";
 import { useAuth } from "../context/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
 
@@ -36,50 +37,53 @@ export function SignUpPage() {
 
   return (
     <div className="auth-page">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h1>Sign up</h1>
-        <label>
-          Username
-          <input
-            type="text"
-            required
-            minLength={2}
-            maxLength={30}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-          />
-        </label>
-        <label>
-          Email
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-        </label>
-        {error && <p className="auth-error">{error}</p>}
-        {info && <p className="auth-info">{info}</p>}
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Signing up…" : "Sign up"}
-        </button>
-        <p className="auth-switch">
-          Already have an account? <Link to="/login">Log in</Link>
-        </p>
-      </form>
+      <SiteNav />
+      <div className="auth-form-wrap">
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h1>Sign up</h1>
+          <label>
+            Username
+            <input
+              type="text"
+              required
+              minLength={2}
+              maxLength={30}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+            />
+          </label>
+          <label>
+            Email
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+          </label>
+          <label>
+            Password
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+            />
+          </label>
+          {error && <p className="auth-error">{error}</p>}
+          {info && <p className="auth-info">{info}</p>}
+          <button type="submit" disabled={submitting}>
+            {submitting ? "Signing up…" : "Sign up"}
+          </button>
+          <p className="auth-switch">
+            Already have an account? <Link to="/login">Log in</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

@@ -123,10 +123,20 @@ a {
 /* Auth pages */
 .auth-page {
   flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.auth-form-wrap {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
 }
 
 .auth-form {
@@ -196,6 +206,11 @@ a {
   background: var(--panel-bg);
   padding: 14px 20px;
   box-shadow: 5px 5px 0 var(--border);
+}
+
+.stack-header-logo {
+  color: inherit;
+  text-decoration: none;
 }
 
 .stack-header-right {
@@ -432,6 +447,7 @@ a {
   font-weight: 800;
   font-size: 20px;
   letter-spacing: -0.02em;
+  text-decoration: none;
 }
 
 .home-nav-links {

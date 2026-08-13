@@ -41,7 +41,11 @@ export function StackPage() {
   return (
     <div className="stack-page">
       <header className="stack-header">
-        <h1>StickyStack</h1>
+        <h1>
+          <Link to="/" className="stack-header-logo">
+            StickyStack
+          </Link>
+        </h1>
         <div className="stack-header-right">
           <span className="stack-header-greeting">Hi, {displayName}</span>
           <Link to="/settings">Settings</Link>

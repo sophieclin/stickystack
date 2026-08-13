@@ -26,8 +26,15 @@ export function SettingsPage() {
   return (
     <div className="settings-page">
       <header className="stack-header">
-        <h1>Settings</h1>
-        <Link to="/app">Back to stack</Link>
+        <h1>
+          <Link to="/" className="stack-header-logo">
+            StickyStack
+          </Link>
+        </h1>
+        <div className="stack-header-right">
+          <span className="stack-header-greeting">Settings</span>
+          <Link to="/app">Back to stack</Link>
+        </div>
       </header>
 
       {isLoading || !settings ? (

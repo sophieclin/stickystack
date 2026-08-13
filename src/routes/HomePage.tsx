@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import { SiteNav } from "../components/SiteNav";
 import { DEMO_FONT_URL, DEMO_NOTES, DEMO_WEEKS_BY_ID } from "../features/home/demoStack";
 import { StackScene } from "../scene/StackScene";
 
@@ -51,23 +52,7 @@ export function HomePage() {
 
   return (
     <div className="home-page">
-      <header className="home-nav">
-        <span className="home-logo">StickyStack</span>
-        <nav className="home-nav-links">
-          {session ? (
-            <Link to="/app" className="home-nav-cta">
-              Go to your stack
-            </Link>
-          ) : (
-            <>
-              <Link to="/login">Log in</Link>
-              <Link to="/signup" className="home-nav-cta">
-                Sign up for free
-              </Link>
-            </>
-          )}
-        </nav>
-      </header>
+      <SiteNav />
 
       <section className="home-hero">
         <div className="home-hero-copy">
