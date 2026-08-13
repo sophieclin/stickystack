@@ -778,6 +778,101 @@ a {
   box-shadow: 3px 3px 0 var(--border);
 }
 
+/* Scroll-driven story: sticky background spike + sticky-note points that
+   type themselves in, then spike onto the pile as you scroll past. */
+.scroll-spike {
+  position: relative;
+}
+
+.scroll-spike-bg {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 0;
+}
+
+.scroll-spike-bg canvas {
+  display: block;
+}
+
+.scroll-spike-points {
+  position: relative;
+  margin-top: -100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scroll-point {
+  height: 180vh;
+  position: relative;
+}
+
+.scroll-note-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-left: 6%;
+}
+
+.scroll-note-card {
+  pointer-events: auto;
+  max-width: 380px;
+  border: var(--bw) solid var(--border);
+  border-radius: 6px;
+  box-shadow: 6px 6px 0 var(--border);
+  padding: 24px;
+  transform: rotate(-1.5deg);
+}
+
+.scroll-note-heading {
+  font-family: var(--hand);
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  white-space: pre-wrap;
+}
+
+.scroll-note-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 22px;
+  background: #1a1a1a;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: scroll-note-blink 0.8s step-end infinite;
+}
+
+@keyframes scroll-note-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.scroll-note-bullets {
+  margin: 0;
+  padding-left: 20px;
+  font-family: var(--hand);
+  font-size: 18px;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@media (max-width: 760px) {
+  .scroll-note-sticky {
+    padding-left: 0;
+    justify-content: center;
+  }
+
+  .scroll-note-card {
+    max-width: 82vw;
+  }
+}
+
 .home-final-cta {
   text-align: center;
   border: var(--bw) solid var(--border);

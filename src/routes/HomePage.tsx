@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { SiteNav } from "../components/SiteNav";
 import { DEMO_FONT_URL, DEMO_NOTES, DEMO_WEEKS_BY_ID } from "../features/home/demoStack";
+import { ScrollSpikeSection } from "../features/home/ScrollSpikeSection";
 import { StackScene } from "../scene/StackScene";
 
 const PERSONAS = [
@@ -36,15 +37,6 @@ const PROBLEMS = [
     label: "Flat",
     body: "A list is a list. Nothing about it feels like an actual week of work.",
   },
-];
-
-const FEATURES = [
-  { title: "One-click spike", body: "Mark a task done and watch it spear onto your pile with a satisfying animation." },
-  { title: "One color per week", body: "Every week gets its own sticky-note color, so your pile tells a visual story of time passing." },
-  { title: "Reload-safe pile", body: "Your pile's layout is deterministic — refresh the page and it's exactly where you left it." },
-  { title: "Drag to spin", body: "It's a real 3D object sitting on your desk. Grab it and turn it around." },
-  { title: "Auto-archiving", body: "Old weeks quietly age out of view. Nothing's deleted — your stack just stays current." },
-  { title: "Pick your handwriting", body: "Choose from a few handwritten fonts so your notes feel like yours." },
 ];
 
 export function HomePage() {
@@ -123,55 +115,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-section">
-        <h2 className="home-section-title">
-          A to-do list that gives you something back
-        </h2>
-        <div className="home-feature-grid">
-          {FEATURES.map((f) => (
-            <div key={f.title} className="home-card">
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="home-callout">
-        <div className="home-callout-media">
-          <div className="home-mock-grid">
-            {["Ship landing page", "Write demo copy", "Fix that bug", "Reply to emails"].map((t) => (
-              <div key={t} className="home-mock-tile">
-                {t}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="home-callout-copy">
-          <h2 className="home-section-title">A to-do list that doesn't feel like a chore</h2>
-          <p>
-            Add tasks as sticky notes, cross them off with one tap, and watch each one spear onto
-            your pile. No projects, no priorities to configure — just this week's list.
-          </p>
-        </div>
-      </section>
-
-      <section className="home-callout home-callout--reverse">
-        <div className="home-callout-media">
-          <div className="home-mock-swatches">
-            {["#f4a259", "#f25c54", "#f6bd60", "#84a98c", "#6699cc", "#b298dc"].map((c) => (
-              <span key={c} className="home-mock-swatch" style={{ background: c }} />
-            ))}
-          </div>
-        </div>
-        <div className="home-callout-copy">
-          <h2 className="home-section-title">Every week gets its own color</h2>
-          <p>
-            Pick a color when you start your week, and every note you spike stays that color for
-            good. Scroll down your pile and you're scrolling through your own history.
-          </p>
-        </div>
-      </section>
+      <ScrollSpikeSection />
 
       <section className="home-final-cta">
         <h2>Ready to see your week stack up?</h2>
