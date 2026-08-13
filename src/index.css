@@ -798,6 +798,18 @@ a {
 }
 
 /* Settings page */
+.username-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  max-width: 360px;
+}
+
+.username-form input {
+  flex: 1;
+  min-width: 0;
+}
+
 .font-picker,
 .archive-picker {
   display: flex;

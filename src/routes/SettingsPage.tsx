@@ -1,3 +1,4 @@
+import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { FONT_OPTION_LIST } from "../lib/fonts";
 import { useUserSettings } from "../hooks/useUserSettings";
@@ -8,6 +9,19 @@ const ARCHIVE_MONTH_OPTIONS = [1, 2, 3, 4];
 export function SettingsPage() {
   const { data: settings, isLoading } = useUserSettings();
   const updateSettings = useUpdateSettings();
+  const [usernameInput, setUsernameInput] = useState("");
+
+  useEffect(() => {
+    setUsernameInput(settings?.username ?? "");
+  }, [settings?.username]);
+
+  function handleUsernameSubmit(e: FormEvent) {
+    e.preventDefault();
+    const trimmed = usernameInput.trim();
+    if (trimmed && trimmed !== settings?.username) {
+      updateSettings.mutate({ username: trimmed });
+    }
+  }
 
   return (
     <div className="settings-page">
@@ -20,6 +34,28 @@ export function SettingsPage() {
         <p>Loading…</p>
       ) : (
         <>
+          <section>
+            <h2>Username</h2>
+            <p>Shown as your greeting in the app header.</p>
+            <form className="username-form" onSubmit={handleUsernameSubmit}>
+              <input
+                type="text"
+                required
+                minLength={2}
+                maxLength={30}
+                value={usernameInput}
+                onChange={(e) => setUsernameInput(e.target.value)}
+                autoComplete="username"
+              />
+              <button
+                type="submit"
+                disabled={updateSettings.isPending || !usernameInput.trim() || usernameInput.trim() === settings.username}
+              >
+                {updateSettings.isPending ? "Saving…" : "Save"}
+              </button>
+            </form>
+          </section>
+
           <section>
             <h2>Handwriting font</h2>
             <div className="font-picker">

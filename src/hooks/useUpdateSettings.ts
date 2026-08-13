@@ -9,7 +9,11 @@ export function useUpdateSettings() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (patch: { archive_months?: number; handwriting_font?: HandwritingFont }) => {
+    mutationFn: async (patch: {
+      archive_months?: number;
+      handwriting_font?: HandwritingFont;
+      username?: string;
+    }) => {
       if (!userId) throw new Error("Not authenticated");
       const { error } = await supabase.from("user_settings").update(patch).eq("user_id", userId);
       if (error) throw error;

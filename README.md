@@ -7,8 +7,9 @@ color-coded record of what you've finished.
 ## Setup
 
 1. **Create a Supabase project** at [supabase.com](https://supabase.com).
-2. **Run the schema migration**: open the SQL editor in your Supabase project and run the
-   contents of [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql).
+2. **Run the schema migrations**: open the SQL editor in your Supabase project and run the
+   contents of each file in [`supabase/migrations/`](supabase/migrations/) in order
+   (`0001_init.sql`, then `0002_add_username.sql`).
 3. **Disable email confirmation** (optional, recommended for local dev): in Supabase dashboard →
    Authentication → Providers → Email, turn off "Confirm email" so sign-up logs you in
    immediately without needing to click a confirmation link.

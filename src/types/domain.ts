@@ -8,6 +8,7 @@ export type UserSettings = {
   user_id: string;
   archive_months: number;
   handwriting_font: HandwritingFont;
+  username: string | null;
 };
 
 export type Week = {

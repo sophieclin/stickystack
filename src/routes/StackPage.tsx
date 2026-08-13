@@ -17,8 +17,6 @@ import { StackScene } from "../scene/StackScene";
 
 export function StackPage() {
   const { session } = useAuth();
-  const username = (session?.user.user_metadata as { username?: string } | undefined)?.username;
-  const displayName = username || session?.user.email;
   const { week, isLoading: weekLoading, setColor } = useCurrentWeek();
   const { notes: activeNotes } = useActiveNotes();
   const { notes: doneNotes, isLoading: doneNotesLoading } = useDoneNotes();
@@ -35,6 +33,7 @@ export function StackPage() {
   }, [weeksQuery.data]);
 
   const fontUrl = FONT_OPTIONS[settings?.handwriting_font ?? "caveat"].meshFontUrl;
+  const displayName = settings?.username || session?.user.email;
 
   const needsColor = !weekLoading && week && !week.color;
   const canAdd = !!week && !!week.color;

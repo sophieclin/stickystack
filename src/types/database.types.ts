@@ -11,6 +11,7 @@ export type Database = {
           user_id: string;
           archive_months: number;
           handwriting_font: HandwritingFont;
+          username: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -18,10 +19,12 @@ export type Database = {
           user_id: string;
           archive_months?: number;
           handwriting_font?: HandwritingFont;
+          username?: string | null;
         };
         Update: {
           archive_months?: number;
           handwriting_font?: HandwritingFont;
+          username?: string | null;
         };
         Relationships: [];
       };
