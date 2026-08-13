@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { PCFShadowMap } from "three";
 import type { Note, Week } from "../types/domain";
 import { SpikeAssembly } from "./SpikeAssembly";
+import { woodTexture } from "./textures/woodTexture";
 
 const ORBIT_TARGET: [number, number, number] = [0, 0.46, 0];
 
@@ -46,7 +47,7 @@ export function StackScene({
       </Suspense>
       <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[20, 20]} />
-        <shadowMaterial opacity={0.25} />
+        <meshStandardMaterial map={woodTexture} roughness={0.85} metalness={0} />
       </mesh>
       <SpikeAssembly notes={notes} isLoading={isLoading} weeksById={weeksById} fontUrl={fontUrl} />
       <OrbitControls
