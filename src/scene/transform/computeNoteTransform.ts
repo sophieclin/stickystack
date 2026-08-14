@@ -18,19 +18,21 @@ export interface NoteTransform {
 }
 
 /**
- * Pure function of (id, pileIndex): always produces the same fan placement
- * for the same note, so reloading the page reproduces the exact same layout
- * with no persisted transform data. `pileIndex` is the note's rank within
- * its own pile (0 = bottom) — not `note.stack_position`, which is a
- * database identity shared across every user's notes and would leave gaps
- * that float a pile off the base.
+ * Pure function of (id, pileIndex): always produces the same placement for
+ * the same note, so reloading the page reproduces the exact same layout with
+ * no persisted transform data. `pileIndex` is the note's rank within its own
+ * pile (0 = bottom) — not `note.stack_position`, which is a database
+ * identity shared across every user's notes and would leave gaps that float
+ * a pile off the base.
  */
 export function computeNoteTransform(id: string, pileIndex: number): NoteTransform {
   const rand = seededRandom(id);
 
-  // Golden-angle spiral for even distribution around the spike, plus a
-  // slight seeded wobble on top so it still reads as an organic (but neat,
-  // tightly-mounded) pile rather than a scattered starburst.
+  // Every note is pierced through its own center, directly above the one
+  // below it, so there's nothing to spatially distribute — instead each
+  // note is turned to a new golden-angle offset as it's speared, plus a
+  // slight seeded wobble, so the pile reads as a stack of individually
+  // twisted sheets rather than a single frozen orientation repeated upward.
   const baseAngleDeg = (pileIndex * GOLDEN_ANGLE_DEG) % 360;
   const angleDeg = baseAngleDeg + (rand() - 0.5) * 14;
   const angleRad = (angleDeg * Math.PI) / 180;

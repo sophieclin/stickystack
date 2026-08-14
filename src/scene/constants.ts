@@ -7,8 +7,9 @@ export const SPIKE_TOP_RADIUS = 0.008;
 /** y of the spike's base (where it meets the tin lid). */
 export const SPIKE_ORIGIN_Y = BASE_HEIGHT / 2;
 
-export const NOTE_SIZE = 0.46;
-export const NOTE_PIVOT_INSET = 0.05;
+// Sized to fill most of the base's footprint (BASE_RADIUS 0.48) without its
+// corners poking past the round edge: half-diagonal = NOTE_SIZE / sqrt(2).
+export const NOTE_SIZE = 0.66;
 export const NOTE_HEIGHT_STEP = 0.008;
 export const NOTE_HEIGHT_JITTER = 0.0025;
 export const NOTE_CURL_AMOUNT = 0.035;

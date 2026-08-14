@@ -5,7 +5,7 @@ import type { Note } from "../types/domain";
 import { useSpearAndSettle } from "./animation/useSpearAndSettle";
 import { useTornAway } from "./animation/useTornAway";
 import { NOTE_SIZE } from "./constants";
-import { NOTE_CENTER_OFFSET, curledNoteGeometry } from "./geometry/curledNoteGeometry";
+import { curledNoteGeometry } from "./geometry/curledNoteGeometry";
 import type { NotePhase } from "./NotesStack";
 import { computeNoteTransform } from "./transform/computeNoteTransform";
 
@@ -69,7 +69,7 @@ export function NoteMesh({
         <meshStandardMaterial color={color} roughness={0.88} metalness={0} side={DoubleSide} />
       </mesh>
       <Text
-        position={[NOTE_CENTER_OFFSET, 0.007, -NOTE_CENTER_OFFSET]}
+        position={[0, 0.007, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
         fontSize={0.052}
         maxWidth={NOTE_SIZE * 0.8}
