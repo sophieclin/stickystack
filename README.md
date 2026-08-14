@@ -13,14 +13,18 @@ color-coded record of what you've finished.
 3. **Disable email confirmation** (optional, recommended for local dev): in Supabase dashboard →
    Authentication → Providers → Email, turn off "Confirm email" so sign-up logs you in
    immediately without needing to click a confirmation link.
-4. **Copy your API credentials**: in Supabase dashboard → Project Settings → API, copy the
+4. **Allow the password-reset redirect**: in Supabase dashboard → Authentication → URL
+   Configuration → Redirect URLs, add `http://localhost:5173/reset-password` (and your deployed
+   site's `/reset-password` URL, once you have one) — Supabase rejects `resetPasswordForEmail`
+   redirects that aren't on this allow-list.
+5. **Copy your API credentials**: in Supabase dashboard → Project Settings → API, copy the
    Project URL and `anon` public key into a `.env` file at the repo root (copy `.env.example` as
    a starting point):
    ```
    VITE_SUPABASE_URL=https://your-project-ref.supabase.co
    VITE_SUPABASE_ANON_KEY=your-anon-key
    ```
-5. **Install dependencies and run**:
+6. **Install dependencies and run**:
    ```
    npm install
    npm run dev

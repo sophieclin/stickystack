@@ -2,9 +2,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import { queryClient } from "./lib/queryClient";
+import { ForgotPasswordPage } from "./routes/ForgotPasswordPage";
 import { HomePage } from "./routes/HomePage";
 import { LoginPage } from "./routes/LoginPage";
 import { RequireAuth } from "./routes/RequireAuth";
+import { ResetPasswordPage } from "./routes/ResetPasswordPage";
 import { SettingsPage } from "./routes/SettingsPage";
 import { SignUpPage } from "./routes/SignUpPage";
 import { StackPage } from "./routes/StackPage";
@@ -18,6 +20,8 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route
               path="/app"
               element={
