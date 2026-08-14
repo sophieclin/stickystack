@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FONT_OPTION_LIST } from "../lib/fonts";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useUpdateSettings } from "../hooks/useUpdateSettings";
+import { supabase } from "../lib/supabaseClient";
 
 const ARCHIVE_MONTH_OPTIONS = [1, 2, 3, 4];
 
@@ -34,6 +35,9 @@ export function SettingsPage() {
         <div className="stack-header-right">
           <span className="stack-header-greeting">Settings</span>
           <Link to="/app">Back to stack</Link>
+          <button type="button" onClick={() => supabase.auth.signOut()}>
+            Log out
+          </button>
         </div>
       </header>
 
