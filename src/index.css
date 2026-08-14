@@ -615,7 +615,7 @@ a {
   color: color-mix(in srgb, var(--text) 60%, transparent);
   margin: 0;
   background: var(--bg);
-  min-height: 50vh;
+  min-height: 22vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -824,8 +824,11 @@ a {
 .scroll-spike {
   position: relative;
   /* Pulls the curtain (.home-divider-line) up to overlap and mask the
-   * background's tail-end "unstick and scroll away" — see that rule. */
-  margin-bottom: -50vh;
+   * background's tail-end "unstick and scroll away" — see that rule. Must
+   * stay equal to .home-divider-line's min-height: any smaller and the
+   * curtain doesn't fully cover the tail, so the scene peeks back through
+   * below the divider text before the next section starts. */
+  margin-bottom: -22vh;
 }
 
 .scroll-spike-bg {
