@@ -416,6 +416,21 @@ a {
   border: var(--bw) solid var(--border);
   padding: 0;
   background: none;
+  overflow: hidden;
+}
+
+.color-swatches input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-swatches input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.color-swatches input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
 }
 
 /* Home / landing page */
