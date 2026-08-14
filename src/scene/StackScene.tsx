@@ -38,7 +38,7 @@ export function StackScene({
       camera={{ position: [0, 1.02, 2.55], fov: 33 }}
       onCreated={({ camera }) => camera.lookAt(...ORBIT_TARGET)}
     >
-      <color attach="background" args={["#efece5"]} />
+      <color attach="background" args={["#4D301B"]} />
       <hemisphereLight args={["#fff7ec", "#4a4a55", 0.9]} />
       <directionalLight
         position={[0.9, 1.6, 0.9]}
