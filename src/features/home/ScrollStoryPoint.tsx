@@ -16,11 +16,14 @@ function fullText(point: ScrollStoryPoint): string {
 
 export function ScrollStoryPoint({
   point,
+  index,
   onReveal,
 }: {
   point: ScrollStoryPoint;
+  index: number;
   onReveal: (id: string) => void;
 }) {
+  const side = index % 2 === 0 ? "left" : "right";
   const [shown, setShown] = useState(0);
   const text = fullText(point);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -55,8 +58,8 @@ export function ScrollStoryPoint({
 
   return (
     <div className="scroll-point" ref={ref}>
-      <div className="scroll-note-sticky">
-        <div className="scroll-note-card" style={{ backgroundColor: point.color }}>
+      <div className={`scroll-note-sticky scroll-note-sticky--${side}`}>
+        <div className={`scroll-note-card scroll-note-card--${side}`} style={{ backgroundColor: point.color }}>
           <p className="scroll-note-heading">
             {headingPart}
             {!typingDone && <span className="scroll-note-cursor" />}

@@ -78,6 +78,8 @@ export function HomePage() {
         </div>
       </section>
 
+      <ScrollSpikeSection />
+
       <p className="home-divider-line">Weekly resets. Zero backlog guilt. Just a pile that grows.</p>
 
       <section className="home-testimonial">
@@ -114,8 +116,6 @@ export function HomePage() {
           ))}
         </div>
       </section>
-
-      <ScrollSpikeSection />
 
       <section className="home-final-cta">
         <h2>Ready to see your week stack up?</h2>

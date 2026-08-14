@@ -20,11 +20,17 @@ export function ScrollSpikeSection() {
   return (
     <section className="scroll-spike">
       <div className="scroll-spike-bg">
-        <StackScene notes={notes} isLoading={false} weeksById={SCROLL_WEEKS_BY_ID} fontUrl={DEMO_FONT_URL} />
+        <StackScene
+          notes={notes}
+          isLoading={false}
+          weeksById={SCROLL_WEEKS_BY_ID}
+          fontUrl={DEMO_FONT_URL}
+          interactive={false}
+        />
       </div>
       <div className="scroll-spike-points">
-        {SCROLL_STORY_POINTS.map((point) => (
-          <ScrollStoryPoint key={point.id} point={point} onReveal={handleReveal} />
+        {SCROLL_STORY_POINTS.map((point, index) => (
+          <ScrollStoryPoint key={point.id} point={point} index={index} onReveal={handleReveal} />
         ))}
       </div>
     </section>

@@ -14,12 +14,22 @@ export function StackScene({
   weeksById,
   fontUrl,
   autoRotate = false,
+  interactive = true,
 }: {
   notes: Note[];
   isLoading: boolean;
   weeksById: Map<string, Week>;
   fontUrl: string;
   autoRotate?: boolean;
+  /**
+   * Disable when the canvas fills the viewport as a pinned scroll backdrop.
+   * OrbitControls sets `touchAction: "none"` on the canvas as soon as it
+   * connects (regardless of enableZoom/enablePan/enableRotate), which
+   * blocks the browser's normal wheel-scroll over that element — not just
+   * drag-to-rotate. The only real fix is to not mount OrbitControls at all
+   * for a passive backdrop instance.
+   */
+  interactive?: boolean;
 }) {
   return (
     <Canvas
@@ -50,18 +60,20 @@ export function StackScene({
         <meshStandardMaterial map={woodTexture} roughness={0.85} metalness={0} />
       </mesh>
       <SpikeAssembly notes={notes} isLoading={isLoading} weeksById={weeksById} fontUrl={fontUrl} />
-      <OrbitControls
-        target={ORBIT_TARGET}
-        enablePan={false}
-        minDistance={1.4}
-        maxDistance={4}
-        minPolarAngle={Math.PI / 8}
-        maxPolarAngle={Math.PI / 2.1}
-        enableDamping
-        dampingFactor={0.08}
-        autoRotate={autoRotate}
-        autoRotateSpeed={1.1}
-      />
+      {interactive && (
+        <OrbitControls
+          target={ORBIT_TARGET}
+          enablePan={false}
+          minDistance={1.4}
+          maxDistance={4}
+          minPolarAngle={Math.PI / 8}
+          maxPolarAngle={Math.PI / 2.1}
+          enableDamping
+          dampingFactor={0.08}
+          autoRotate={autoRotate}
+          autoRotateSpeed={1.1}
+        />
+      )}
     </Canvas>
   );
 }

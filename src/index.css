@@ -573,11 +573,22 @@ a {
   display: block;
 }
 
+/* Doubles as a "curtain" that masks the scroll-spike section's tail end
+   (see .scroll-spike's negative margin-bottom): once the last note has
+   spiked, the background scene still needs a stretch of scroll to unstick
+   and clear the viewport on its own. Overlapping this opaque block over
+   that tail means the transition finishes as soon as the last note lands,
+   instead of leaving an empty-feeling stretch of scroll after it. */
 .home-divider-line {
   text-align: center;
   font-weight: 700;
   opacity: 0.6;
   margin: 0;
+  background: var(--bg);
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .home-testimonial {
@@ -782,6 +793,9 @@ a {
    type themselves in, then spike onto the pile as you scroll past. */
 .scroll-spike {
   position: relative;
+  /* Pulls the curtain (.home-divider-line) up to overlap and mask the
+   * background's tail-end "unstick and scroll away" — see that rule. */
+  margin-bottom: -50vh;
 }
 
 .scroll-spike-bg {
@@ -813,26 +827,44 @@ a {
   height: 100vh;
   display: flex;
   align-items: center;
+}
+
+.scroll-note-sticky--left {
+  justify-content: flex-start;
   padding-left: 6%;
+}
+
+.scroll-note-sticky--right {
+  justify-content: flex-end;
+  padding-right: 6%;
 }
 
 .scroll-note-card {
   pointer-events: auto;
-  max-width: 380px;
+  width: 300px;
+  aspect-ratio: 1 / 1;
   border: var(--bw) solid var(--border);
   border-radius: 6px;
   box-shadow: 6px 6px 0 var(--border);
-  padding: 24px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   transform: rotate(-1.5deg);
+}
+
+.scroll-note-card--right {
+  transform: rotate(1.5deg);
 }
 
 .scroll-note-heading {
   font-family: var(--hand);
-  font-size: 26px;
+  font-size: 21px;
   font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 12px;
   white-space: pre-wrap;
+  line-height: 1.25;
 }
 
 .scroll-note-cursor {
@@ -853,9 +885,10 @@ a {
 
 .scroll-note-bullets {
   margin: 0;
-  padding-left: 20px;
+  padding-left: 18px;
   font-family: var(--hand);
-  font-size: 18px;
+  font-size: 15px;
+  line-height: 1.3;
   color: #1a1a1a;
   display: flex;
   flex-direction: column;
@@ -863,13 +896,16 @@ a {
 }
 
 @media (max-width: 760px) {
-  .scroll-note-sticky {
+  .scroll-note-sticky--left,
+  .scroll-note-sticky--right {
     padding-left: 0;
+    padding-right: 0;
     justify-content: center;
   }
 
   .scroll-note-card {
-    max-width: 82vw;
+    width: 82vw;
+    max-width: 300px;
   }
 }
 
