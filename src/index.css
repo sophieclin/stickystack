@@ -593,11 +593,26 @@ a {
    spiked, the background scene still needs a stretch of scroll to unstick
    and clear the viewport on its own. Overlapping this opaque block over
    that tail means the transition finishes as soon as the last note lands,
-   instead of leaving an empty-feeling stretch of scroll after it. */
+   instead of leaving an empty-feeling stretch of scroll after it.
+   `isolation: isolate` is required for the overlap to actually read as
+   opaque: without a stacking context here, this plain in-flow block paints
+   *behind* the scene's `position: sticky` canvas (its z-indexed descendants
+   are positioned, and positioned elements always paint above non-positioned
+   in-flow ones in the same stacking context), so the wood floor and spike
+   bleed through despite the solid background. `position: relative` +
+   `z-index` also fixes the paint order but was dropped: paired with the
+   sticky canvas and this element's negative-margin overlap, it corrupted
+   the canvas's compositing during scroll (rendered as a squashed sliver).
+   `isolation` establishes the same stacking context without positioning
+   this element, avoiding that interaction. */
 .home-divider-line {
+  isolation: isolate;
   text-align: center;
   font-weight: 700;
-  opacity: 0.6;
+  /* Muted like other captions (e.g. .home-eyebrow), but via `color` rather
+   * than `opacity` — `opacity` would also fade the solid `background` below,
+   * defeating its job as an opaque curtain over the scene. */
+  color: color-mix(in srgb, var(--text) 60%, transparent);
   margin: 0;
   background: var(--bg);
   min-height: 50vh;
@@ -834,6 +849,13 @@ a {
 .scroll-point {
   height: 180vh;
   position: relative;
+}
+
+/* See the comment in ScrollSpikeSection.tsx: gives the last note the same
+   kind of landing buffer the earlier notes get for free from the next
+   point's block. */
+.scroll-spike-tail-buffer {
+  height: 50vh;
 }
 
 .scroll-note-sticky {

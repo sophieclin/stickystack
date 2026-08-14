@@ -32,6 +32,13 @@ export function ScrollSpikeSection() {
         {SCROLL_STORY_POINTS.map((point, index) => (
           <ScrollStoryPoint key={point.id} point={point} index={index} onReveal={handleReveal} />
         ))}
+        {/* Every point but the last gets its landing buffer for free: the
+         * next 180vh point block stays pinned over it while its spear
+         * animation finishes. The last point has no such block after it —
+         * without this, its exit trigger fires just ~150px before the
+         * divider curtain (.home-divider-line) starts covering the scene,
+         * nowhere near enough scroll room for the animation to finish first. */}
+        <div className="scroll-spike-tail-buffer" />
       </div>
     </section>
   );
