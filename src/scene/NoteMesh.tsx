@@ -29,6 +29,7 @@ export function NoteMesh({
   onLanded?: () => void;
 }) {
   const groupRef = useRef<Group>(null);
+  const hasBullets = useMemo(() => /(^|\n)• /.test(note.text), [note.text]);
 
   const { position, quaternion, scale } = useMemo(
     () => computeNoteTransform(note.id, pileIndex),
@@ -74,7 +75,7 @@ export function NoteMesh({
         fontSize={0.052}
         maxWidth={NOTE_SIZE * 0.8}
         lineHeight={1.15}
-        textAlign="center"
+        textAlign={hasBullets ? "left" : "center"}
         anchorX="center"
         anchorY="middle"
         color="#2a2a2a"
