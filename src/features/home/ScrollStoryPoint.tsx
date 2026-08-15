@@ -18,40 +18,58 @@ export function ScrollStoryPoint({
   point,
   index,
   onReveal,
+  onUnreveal,
 }: {
   point: ScrollStoryPoint;
   index: number;
   onReveal: (id: string) => void;
+  onUnreveal: (id: string) => void;
 }) {
   const side = index % 2 === 0 ? "left" : "right";
   const [shown, setShown] = useState(0);
   const text = fullText(point);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  function stopTyping() {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }
+
   const ref = useScrollPointTrigger<HTMLDivElement>({
     onEnter: () => {
+      stopTyping();
+      setShown(0);
       const startedAt = performance.now();
       intervalRef.current = setInterval(() => {
         const elapsed = performance.now() - startedAt;
         const target = Math.min(text.length, Math.floor(elapsed / MS_PER_CHAR));
         setShown((prev) => (prev === target ? prev : target));
-        if (target >= text.length && intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
+        if (target >= text.length) stopTyping();
       }, POLL_MS);
     },
     onExit: () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      stopTyping();
       setShown(text.length);
       onReveal(point.id);
     },
+    onReverseExit: () => {
+      onUnreveal(point.id);
+    },
+    onReverseEnter: () => {
+      stopTyping();
+      const startedAt = performance.now();
+      intervalRef.current = setInterval(() => {
+        const elapsed = performance.now() - startedAt;
+        const target = Math.max(0, text.length - Math.floor(elapsed / MS_PER_CHAR));
+        setShown((prev) => (prev === target ? prev : target));
+        if (target <= 0) stopTyping();
+      }, POLL_MS);
+    },
   });
 
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+  useEffect(() => stopTyping, []);
 
   const [headingPart, ...bulletParts] = text.slice(0, shown).split("\n");
   const typingDone = shown >= text.length;

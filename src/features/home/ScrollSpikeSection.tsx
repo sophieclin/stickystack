@@ -17,6 +17,15 @@ export function ScrollSpikeSection() {
     setRevealedIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   }
 
+  function handleUnreveal(id: string) {
+    setRevealedIds((prev) => {
+      if (!prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }
+
   return (
     <section className="scroll-spike">
       <div className="scroll-spike-bg">
@@ -30,7 +39,13 @@ export function ScrollSpikeSection() {
       </div>
       <div className="scroll-spike-points">
         {SCROLL_STORY_POINTS.map((point, index) => (
-          <ScrollStoryPoint key={point.id} point={point} index={index} onReveal={handleReveal} />
+          <ScrollStoryPoint
+            key={point.id}
+            point={point}
+            index={index}
+            onReveal={handleReveal}
+            onUnreveal={handleUnreveal}
+          />
         ))}
         {/* Every point but the last gets its landing buffer for free: the
          * next 180vh point block stays pinned over it while its spear
