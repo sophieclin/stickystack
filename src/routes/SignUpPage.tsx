@@ -79,6 +79,10 @@ export function SignUpPage() {
           <button type="submit" disabled={submitting}>
             {submitting ? "Signing up…" : "Sign up"}
           </button>
+          <p className="auth-legal">
+            By signing up, you agree to the <Link to="/terms">Terms</Link> and{" "}
+            <Link to="/privacy">Privacy Policy</Link>.
+          </p>
           <p className="auth-switch">
             Already have an account? <Link to="/login">Log in</Link>
           </p>

@@ -176,10 +176,71 @@ a {
   font-size: 14px;
 }
 
+.auth-legal {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
 .page-loading {
   padding: 48px;
   text-align: center;
   font-weight: 700;
+}
+
+/* Legal pages (Terms, Privacy) */
+.legal-page {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.legal-content {
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 48px;
+  line-height: 1.6;
+}
+
+.legal-content h2 {
+  margin-top: 32px;
+  margin-bottom: 8px;
+}
+
+.legal-updated {
+  opacity: 0.6;
+  font-size: 14px;
+  margin-top: -8px;
+}
+
+/* 404 page */
+.not-found {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.not-found h1 {
+  font-size: 64px;
+}
+
+/* Error boundary fallback */
+.error-boundary {
+  max-width: 480px;
+  margin: 15vh auto;
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 /* Stack page */

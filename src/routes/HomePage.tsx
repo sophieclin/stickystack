@@ -135,6 +135,8 @@ export function HomePage() {
               <Link to="/signup">Sign up</Link>
             </>
           )}
+          <Link to="/terms">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
         </div>
       </footer>
     </div>
