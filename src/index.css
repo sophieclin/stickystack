@@ -123,10 +123,8 @@ a {
 /* Auth pages */
 .auth-page {
   flex: 1;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
-  padding: 24px;
+  padding: 24px clamp(24px, 5vw, 96px);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -159,6 +157,10 @@ a {
   font-size: 14px;
   font-weight: 700;
   text-align: left;
+}
+
+.turnstile-widget {
+  min-height: 65px;
 }
 
 .auth-error {
@@ -497,10 +499,8 @@ a {
 /* Home / landing page */
 .home-page {
   flex: 1;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
-  padding: 24px;
+  padding: 24px clamp(24px, 5vw, 96px);
   display: flex;
   flex-direction: column;
   gap: 64px;

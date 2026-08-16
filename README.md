@@ -24,7 +24,17 @@ color-coded record of what you've finished.
    VITE_SUPABASE_URL=https://your-project-ref.supabase.co
    VITE_SUPABASE_ANON_KEY=your-anon-key
    ```
-6. **Install dependencies and run**:
+6. **Set up bot protection (Cloudflare Turnstile)**: create a Turnstile widget at the
+   [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/turnstile) (domain: your dev
+   host plus your deployed domain). Add the **Secret Key** in Supabase dashboard → Authentication
+   → Attack Protection → enable CAPTCHA protection → provider "Turnstile". Add the **Site Key** to
+   `.env`:
+   ```
+   VITE_TURNSTILE_SITE_KEY=your-turnstile-site-key
+   ```
+   Login/signup work without this set (the widget just doesn't render), but Supabase will reject
+   auth requests once CAPTCHA protection is enabled on the project without a valid token.
+7. **Install dependencies and run**:
    ```
    npm install
    npm run dev

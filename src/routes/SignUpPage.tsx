@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { SiteNav } from "../components/SiteNav";
+import { Turnstile } from "../components/Turnstile";
 import { useAuth } from "../context/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
 
@@ -9,6 +10,7 @@ export function SignUpPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -23,7 +25,7 @@ export function SignUpPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username } },
+      options: { data: { username }, captchaToken },
     });
     setSubmitting(false);
     if (error) {
@@ -74,6 +76,7 @@ export function SignUpPage() {
               autoComplete="new-password"
             />
           </label>
+          <Turnstile onVerify={setCaptchaToken} />
           {error && <p className="auth-error">{error}</p>}
           {info && <p className="auth-info">{info}</p>}
           <button type="submit" disabled={submitting}>
