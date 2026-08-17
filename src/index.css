@@ -944,6 +944,32 @@ a {
   justify-content: center;
 }
 
+/* Positioned wrapper for the divider's text + local flying notes. Deliberately
+ * NOT on .home-divider-line itself — see that rule's comment on why adding
+ * `position` there broke the sticky canvas's compositing. This inner element
+ * isn't part of that negative-margin overlap relationship, so it's safe to
+ * position: it just needs to sit the notes (painted in normal flow, step 3/6)
+ * behind the text (bumped to z-index so it wins the tie). */
+.home-divider-inner {
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.home-divider-note {
+  z-index: 0;
+}
+
+.home-divider-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
 .home-testimonial {
   text-align: center;
   max-width: 640px;

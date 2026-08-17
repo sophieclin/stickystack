@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-type NoteStyle = CSSProperties & { "--rotate": string };
+export type NoteStyle = CSSProperties & { "--rotate": string };
 
 // Same palette used by the demo pile (see demoStack.ts) and the real color picker.
 const NOTES = [

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { SiteNav } from "../components/SiteNav";
 import { DEMO_FONT_URL, DEMO_NOTES, DEMO_WEEKS_BY_ID } from "../features/home/demoStack";
-import { FlyingNotes } from "../features/home/FlyingNotes";
+import { FlyingNotes, type NoteStyle } from "../features/home/FlyingNotes";
 import { ScrollSpikeSection } from "../features/home/ScrollSpikeSection";
 import { StackScene } from "../scene/StackScene";
 
@@ -23,6 +23,13 @@ const PERSONAS = [
     title: "Visual, tactile thinkers",
     body: "For people who need to see progress, not just read a checkmark.",
   },
+];
+
+// A couple of notes visible through the divider band, tucked behind the text
+// but still in front of the opaque curtain that masks the scroll-spike scene.
+const DIVIDER_NOTES = [
+  { color: "#f6bd60", top: "20%", size: 36, rotate: -10, duration: 18, delay: 0 },
+  { color: "#f2a6c9", top: "60%", size: 30, rotate: 14, duration: 21, delay: -9 },
 ];
 
 const PROBLEMS = [
@@ -82,7 +89,29 @@ export function HomePage() {
 
       <ScrollSpikeSection />
 
-      <p className="home-divider-line">Weekly resets. Zero backlog guilt. Just a pile that grows.</p>
+      <div className="home-divider-line">
+        <div className="home-divider-inner">
+          {DIVIDER_NOTES.map((note, i) => (
+            <span
+              key={i}
+              className="flying-note home-divider-note"
+              aria-hidden="true"
+              style={
+                {
+                  top: note.top,
+                  width: note.size,
+                  height: note.size,
+                  backgroundColor: note.color,
+                  animationDuration: `${note.duration}s`,
+                  animationDelay: `${note.delay}s`,
+                  "--rotate": `${note.rotate}deg`,
+                } as NoteStyle
+              }
+            />
+          ))}
+          <p className="home-divider-text">Weekly resets. Zero backlog guilt. Just a pile that grows.</p>
+        </div>
+      </div>
 
       <section className="home-testimonial">
         <div className="home-testimonial-stars">★★★★★</div>
