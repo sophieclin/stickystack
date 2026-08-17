@@ -25,15 +25,31 @@ color-coded record of what you've finished.
    VITE_SUPABASE_ANON_KEY=your-anon-key
    ```
 6. **Set up bot protection (Cloudflare Turnstile)**: create a Turnstile widget at the
-   [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/turnstile) (domain: your dev
-   host plus your deployed domain). Add the **Secret Key** in Supabase dashboard → Authentication
-   → Attack Protection → enable CAPTCHA protection → provider "Turnstile". Add the **Site Key** to
-   `.env`:
+   [Cloudflare dashboard](https://dash.cloudflare.com/?to=/:account/turnstile) with your deployed
+   domain (Turnstile's domain field doesn't reliably accept `localhost` — don't fight it, see
+   below instead). Add the **Secret Key** in Supabase dashboard → Authentication → Attack
+   Protection → enable CAPTCHA protection → provider "Turnstile". Add the **Site Key** to `.env`:
    ```
    VITE_TURNSTILE_SITE_KEY=your-turnstile-site-key
    ```
    Login/signup work without this set (the widget just doesn't render), but Supabase will reject
    auth requests once CAPTCHA protection is enabled on the project without a valid token.
+
+   **Local dev vs. production keys**: use Cloudflare's [dummy test
+   keypair](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) in your local
+   `.env` — it always passes and works on any domain including `localhost`, so you don't need a
+   real widget for local testing:
+   ```
+   VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+   ```
+   Use the **real** site key (from the widget registered to your deployed domain) in Vercel's
+   env vars instead.
+
+   Supabase's CAPTCHA secret is one project-wide setting, so it can only match one keypair at a
+   time. Default it to the **real** secret (Authentication → Attack Protection) so production
+   auth works normally. If you need to test login/signup locally, temporarily swap it to the test
+   secret `1x0000000000000000000000000000000AA`, then swap it back to the real secret afterward —
+   otherwise local requests using the test site key will fail verification against the real one.
 7. **Install dependencies and run**:
    ```
    npm install
