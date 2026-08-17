@@ -22,7 +22,7 @@ export function TodoSidebar({
   onAdd: () => void;
   addDisabled: boolean;
   onTextChange: (id: string, text: string) => void;
-  onMarkDone: (id: string) => void;
+  onMarkDone: (id: string, text: string) => void;
   onDelete: (id: string) => void;
 }) {
   const [query, setQuery] = useState("");
@@ -68,8 +68,8 @@ export function TodoSidebar({
               isSelected={selectedId === note.id}
               onSelect={() => onSelect(note.id)}
               onTextChange={(text) => onTextChange(note.id, text)}
-              onMarkDone={() => {
-                onMarkDone(note.id);
+              onMarkDone={(text) => {
+                onMarkDone(note.id, text);
                 onSelect(null);
               }}
               onDelete={() => {

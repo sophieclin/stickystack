@@ -20,7 +20,7 @@ export function TodoNoteTile({
   isSelected: boolean;
   onSelect: () => void;
   onTextChange: (text: string) => void;
-  onMarkDone: () => void;
+  onMarkDone: (text: string) => void;
   onDelete: () => void;
 }) {
   const [localText, setLocalText] = useState(text);
@@ -128,7 +128,7 @@ export function TodoNoteTile({
             onClick={(e) => {
               e.stopPropagation();
               commit();
-              onMarkDone();
+              onMarkDone(localText.trim() || text);
             }}
           >
             ✓ Done

@@ -20,6 +20,12 @@ import { StackScene } from "../scene/StackScene";
 
 const UNDO_TOAST_MS = 6000;
 
+function truncateWords(text: string, maxWords: number): string {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= maxWords) return words.join(" ");
+  return words.slice(0, maxWords).join(" ") + "…";
+}
+
 export function StackPage() {
   const { session } = useAuth();
   const { week, isLoading: weekLoading, setColor } = useCurrentWeek();
@@ -36,12 +42,10 @@ export function StackPage() {
   const [undoToast, setUndoToast] = useState<{ id: string; text: string } | null>(null);
   const undoTimeoutRef = useRef<number | null>(null);
 
-  function handleMarkDone(id: string) {
-    const note = activeNotes.find((n) => n.id === id);
+  function handleMarkDone(id: string, text: string) {
     completeNote.mutate(id);
-    if (!note) return;
     if (undoTimeoutRef.current) window.clearTimeout(undoTimeoutRef.current);
-    setUndoToast({ id: note.id, text: note.text });
+    setUndoToast({ id, text: truncateWords(text, 4) });
     undoTimeoutRef.current = window.setTimeout(() => setUndoToast(null), UNDO_TOAST_MS);
   }
 
