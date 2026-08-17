@@ -722,6 +722,42 @@ a {
   border-radius: 50%;
 }
 
+.flying-notes {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.flying-note {
+  position: absolute;
+  left: 0;
+  border: var(--bw) solid var(--border);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--border);
+  opacity: 0.6;
+  animation-name: fly-across;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fly-across {
+  from {
+    transform: translateX(-10vw) rotate(var(--rotate));
+  }
+  to {
+    transform: translateX(110vw) rotate(var(--rotate));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flying-note {
+    animation: none;
+    display: none;
+  }
+}
+
 /* Home / landing page */
 .home-page {
   flex: 1;

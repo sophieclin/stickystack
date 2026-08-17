@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { SiteNav } from "../components/SiteNav";
 import { DEMO_FONT_URL, DEMO_NOTES, DEMO_WEEKS_BY_ID } from "../features/home/demoStack";
+import { FlyingNotes } from "../features/home/FlyingNotes";
 import { ScrollSpikeSection } from "../features/home/ScrollSpikeSection";
 import { StackScene } from "../scene/StackScene";
 
@@ -44,6 +45,7 @@ export function HomePage() {
 
   return (
     <div className="home-page">
+      <FlyingNotes />
       <SiteNav />
 
       <section className="home-hero">
