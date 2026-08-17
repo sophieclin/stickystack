@@ -35,6 +35,7 @@ export function SettingsPage() {
         <div className="stack-header-right">
           <span className="stack-header-greeting">Settings</span>
           <Link to="/app">Back to stack</Link>
+          <Link to="/history">History</Link>
           <button type="button" onClick={() => supabase.auth.signOut()}>
             Log out
           </button>

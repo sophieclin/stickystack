@@ -13,6 +13,7 @@ export function TodoNoteTile({
   onSelect,
   onTextChange,
   onMarkDone,
+  onDelete,
 }: {
   text: string;
   color: string;
@@ -20,6 +21,7 @@ export function TodoNoteTile({
   onSelect: () => void;
   onTextChange: (text: string) => void;
   onMarkDone: () => void;
+  onDelete: () => void;
 }) {
   const [localText, setLocalText] = useState(text);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -107,17 +109,31 @@ export function TodoNoteTile({
         onBlur={commit}
       />
       {isSelected && (
-        <button
-          type="button"
-          className="todo-tile-done"
-          onClick={(e) => {
-            e.stopPropagation();
-            commit();
-            onMarkDone();
-          }}
-        >
-          ✓ Done
-        </button>
+        <>
+          <button
+            type="button"
+            className="todo-tile-delete"
+            title="Delete task"
+            aria-label="Delete task"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (window.confirm(`Delete "${text}"? This can't be undone.`)) {
+                onDelete();
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="todo-tile-done"
+            onClick={(e) => {
+              e.stopPropagation();
+              commit();
+              onMarkDone();
+            }}
+          >
+            ✓ Done
+          </button>
+        </>
       )}
     </div>
   );

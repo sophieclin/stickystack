@@ -367,6 +367,10 @@ a {
   padding: 6px 14px;
 }
 
+.todo-search {
+  width: 100%;
+}
+
 .todo-empty {
   font-weight: 700;
   opacity: 0.6;
@@ -424,6 +428,228 @@ a {
 
 .todo-tile-done:active {
   box-shadow: 1px 1px 0 var(--border);
+}
+
+.todo-tile-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.todo-tile-delete::before,
+.todo-tile-delete::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.todo-tile-delete::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.todo-tile-delete::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.todo-tile-delete:active {
+  box-shadow: 1px 1px 0 var(--border);
+}
+
+/* Undo toast */
+.undo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: var(--bw) solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  box-shadow: 5px 5px 0 var(--border);
+  padding: 12px 16px;
+  z-index: 20;
+  max-width: min(480px, calc(100vw - 32px));
+}
+
+.undo-toast-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Global search (stack page header) */
+.global-search {
+  position: relative;
+  flex: 1;
+  min-width: 160px;
+  max-width: 320px;
+}
+
+.global-search-input {
+  width: 100%;
+}
+
+.global-search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  border: var(--bw) solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: 5px 5px 0 var(--border);
+  padding: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.global-search-empty {
+  margin: 0;
+  padding: 8px;
+  font-weight: 700;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.global-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.global-search-row:hover {
+  background: var(--bg);
+}
+
+.global-search-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--hand);
+  font-size: 15px;
+}
+
+.global-search-meta {
+  font-size: 12px;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.global-search-action {
+  padding: 3px 8px;
+  font-size: 12px;
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.global-search-action:active {
+  box-shadow: 1px 1px 0 var(--border);
+}
+
+/* History page */
+.history-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.history-stat {
+  border: var(--bw) solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: 3px 3px 0 var(--border);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-stat strong {
+  font-size: 26px;
+  color: var(--text-h);
+}
+
+.history-stat span {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-week-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.history-search {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: var(--bw) solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: 3px 3px 0 var(--border);
+  padding: 10px 12px;
+}
+
+.history-row-text {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--hand);
+  font-size: 16px;
+}
+
+.history-row-date {
+  font-size: 13px;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.history-row-undo {
+  padding: 4px 10px;
+  font-size: 13px;
 }
 
 /* Modal */

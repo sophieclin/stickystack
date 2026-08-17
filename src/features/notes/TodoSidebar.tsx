@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import type { Note, Week } from "../../types/domain";
 import { TodoNoteTile } from "./TodoNoteTile";
 
@@ -11,6 +12,7 @@ export function TodoSidebar({
   addDisabled,
   onTextChange,
   onMarkDone,
+  onDelete,
 }: {
   notes: Note[];
   weeksById: Map<string, Week>;
@@ -21,7 +23,16 @@ export function TodoSidebar({
   addDisabled: boolean;
   onTextChange: (id: string, text: string) => void;
   onMarkDone: (id: string) => void;
+  onDelete: (id: string) => void;
 }) {
+  const [query, setQuery] = useState("");
+
+  const filteredNotes = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return notes;
+    return notes.filter((n) => n.text.toLowerCase().includes(q));
+  }, [notes, query]);
+
   return (
     <aside className="todo-sidebar">
       <div className="todo-sidebar-header">
@@ -31,13 +42,25 @@ export function TodoSidebar({
         </button>
       </div>
 
+      {notes.length > 0 && (
+        <input
+          type="text"
+          className="todo-search"
+          placeholder="Search tasks…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      )}
+
       {notes.length === 0 ? (
         <p className="todo-empty">
           {disabled ? "Pick a color for this week first" : "No tasks yet — add one above"}
         </p>
+      ) : filteredNotes.length === 0 ? (
+        <p className="todo-empty">No matches</p>
       ) : (
         <div className="todo-grid">
-          {notes.map((note) => (
+          {filteredNotes.map((note) => (
             <TodoNoteTile
               key={note.id}
               text={note.text}
@@ -47,6 +70,10 @@ export function TodoSidebar({
               onTextChange={(text) => onTextChange(note.id, text)}
               onMarkDone={() => {
                 onMarkDone(note.id);
+                onSelect(null);
+              }}
+              onDelete={() => {
+                onDelete(note.id);
                 onSelect(null);
               }}
             />

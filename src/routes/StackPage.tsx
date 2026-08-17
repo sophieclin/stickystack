@@ -1,19 +1,24 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { ColorPickerModal } from "../features/week/ColorPickerModal";
+import { GlobalSearch } from "../features/notes/GlobalSearch";
 import { TodoSidebar } from "../features/notes/TodoSidebar";
 import { useActiveNotes } from "../hooks/useActiveNotes";
 import { useAddNote } from "../hooks/useAddNote";
 import { useCompleteNote } from "../hooks/useCompleteNote";
 import { useCurrentWeek } from "../hooks/useCurrentWeek";
+import { useDeleteNote } from "../hooks/useDeleteNote";
 import { useDoneNotes } from "../hooks/useDoneNotes";
+import { useUncompleteNote } from "../hooks/useUncompleteNote";
 import { useUpdateNoteText } from "../hooks/useUpdateNoteText";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useWeeks } from "../hooks/useWeeks";
 import { FONT_OPTIONS } from "../lib/fonts";
 import { supabase } from "../lib/supabaseClient";
 import { StackScene } from "../scene/StackScene";
+
+const UNDO_TOAST_MS = 6000;
 
 export function StackPage() {
   const { session } = useAuth();
@@ -24,8 +29,28 @@ export function StackPage() {
   const { data: settings } = useUserSettings();
   const addNote = useAddNote();
   const completeNote = useCompleteNote();
+  const uncompleteNote = useUncompleteNote();
+  const deleteNote = useDeleteNote();
   const updateNoteText = useUpdateNoteText();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [undoToast, setUndoToast] = useState<{ id: string; text: string } | null>(null);
+  const undoTimeoutRef = useRef<number | null>(null);
+
+  function handleMarkDone(id: string) {
+    const note = activeNotes.find((n) => n.id === id);
+    completeNote.mutate(id);
+    if (!note) return;
+    if (undoTimeoutRef.current) window.clearTimeout(undoTimeoutRef.current);
+    setUndoToast({ id: note.id, text: note.text });
+    undoTimeoutRef.current = window.setTimeout(() => setUndoToast(null), UNDO_TOAST_MS);
+  }
+
+  function handleUndo() {
+    if (!undoToast) return;
+    if (undoTimeoutRef.current) window.clearTimeout(undoTimeoutRef.current);
+    uncompleteNote.mutate(undoToast.id);
+    setUndoToast(null);
+  }
 
   const weeksById = useMemo(() => {
     const map = new Map(weeksQuery.data?.map((w) => [w.id, w]) ?? []);
@@ -46,8 +71,10 @@ export function StackPage() {
             StickyStack
           </Link>
         </h1>
+        <GlobalSearch />
         <div className="stack-header-right">
           <span className="stack-header-greeting">Hi, {displayName}</span>
+          <Link to="/history">History</Link>
           <Link to="/settings">Settings</Link>
           <button type="button" onClick={() => supabase.auth.signOut()}>
             Log out
@@ -72,7 +99,8 @@ export function StackPage() {
               );
             }}
             onTextChange={(id, text) => updateNoteText.mutate({ id, text })}
-            onMarkDone={(id) => completeNote.mutate(id)}
+            onMarkDone={handleMarkDone}
+            onDelete={(id) => deleteNote.mutate(id)}
           />
         </div>
 
@@ -84,6 +112,15 @@ export function StackPage() {
 
       {needsColor && (
         <ColorPickerModal submitting={setColor.isPending} onPick={(color) => setColor.mutate(color)} />
+      )}
+
+      {undoToast && (
+        <div className="undo-toast">
+          <span className="undo-toast-text">Completed "{undoToast.text}"</span>
+          <button type="button" onClick={handleUndo}>
+            Undo
+          </button>
+        </div>
       )}
     </div>
   );
