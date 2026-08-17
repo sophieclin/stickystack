@@ -783,7 +783,7 @@ a {
 
 .home-logo {
   font-weight: 800;
-  font-size: 20px;
+  font-size: 26px;
   letter-spacing: -0.02em;
   text-decoration: none;
 }
@@ -821,7 +821,7 @@ a {
 }
 
 .home-cta-button {
-  font-size: 16px;
+  font-size: 17px;
   padding: 12px 24px;
 }
 
@@ -851,13 +851,13 @@ a {
   border-radius: 999px;
   background: var(--panel-bg);
   padding: 4px 14px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   box-shadow: 3px 3px 0 var(--border);
 }
 
 .home-hero-title {
-  font-size: 44px;
+  font-size: 52px;
   line-height: 1.08;
   margin: 0;
   color: var(--text-h);
@@ -866,7 +866,7 @@ a {
 }
 
 .home-hero-sub {
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.5;
   margin: 0;
   max-width: 46ch;
@@ -877,6 +877,7 @@ a {
   align-items: center;
   gap: 18px;
   font-weight: 700;
+  font-size: 17px;
 }
 
 .home-hero-chips {
@@ -886,7 +887,7 @@ a {
   gap: 10px;
   margin: 0;
   padding: 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
