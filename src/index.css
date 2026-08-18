@@ -126,11 +126,25 @@ button[type="submit"],
 .todo-tile-done,
 .modal button:not(.color-swatch),
 .font-card--selected,
-.archive-option--selected,
-.visual-mode-toggle {
+.archive-option--selected {
   background: var(--accent);
   color: var(--accent-text);
   border-color: var(--border);
+}
+
+/* Hardcoded to the star theme's --bg in normal mode, hinting at the
+ * night-sky look this switches you into. Flipped to the accent yellow
+ * under [data-theme="stars"] below — navy-on-navy wouldn't stand out
+ * once you're already in that theme. */
+.visual-mode-toggle {
+  background: #0b1026;
+  color: #eae6ff;
+  border-color: var(--border);
+}
+
+[data-theme="stars"] .visual-mode-toggle {
+  background: var(--accent);
+  color: var(--accent-text);
 }
 
 input[type="text"],
