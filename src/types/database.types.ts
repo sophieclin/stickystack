@@ -1,4 +1,4 @@
-import type { HandwritingFont, Note, NoteStatus, Week } from "./domain";
+import type { HandwritingFont, Note, NoteStatus, VisualMode, Week } from "./domain";
 
 // Hand-written, minimal Supabase database typing (no supabase CLI codegen in this environment).
 // Mirrors supabase/migrations/0001_init.sql. `Relationships`/`Views`/`Functions` are required by
@@ -12,6 +12,7 @@ export type Database = {
           archive_months: number;
           handwriting_font: HandwritingFont;
           username: string | null;
+          visual_mode: VisualMode;
           created_at: string;
           updated_at: string;
         };
@@ -20,11 +21,13 @@ export type Database = {
           archive_months?: number;
           handwriting_font?: HandwritingFont;
           username?: string | null;
+          visual_mode?: VisualMode;
         };
         Update: {
           archive_months?: number;
           handwriting_font?: HandwritingFont;
           username?: string | null;
+          visual_mode?: VisualMode;
         };
         Relationships: [];
       };

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthProvider";
 import { supabase } from "../lib/supabaseClient";
-import type { HandwritingFont } from "../types/domain";
+import type { HandwritingFont, VisualMode } from "../types/domain";
 
 export function useUpdateSettings() {
   const { session } = useAuth();
@@ -13,6 +13,7 @@ export function useUpdateSettings() {
       archive_months?: number;
       handwriting_font?: HandwritingFont;
       username?: string;
+      visual_mode?: VisualMode;
     }) => {
       if (!userId) throw new Error("Not authenticated");
       const { error } = await supabase.from("user_settings").update(patch).eq("user_id", userId);

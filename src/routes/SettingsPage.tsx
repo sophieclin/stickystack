@@ -86,6 +86,23 @@ export function SettingsPage() {
           </section>
 
           <section>
+            <h2>Hidden mode</h2>
+            <p>A secret alternate look: finished tasks drop a star into a jar instead.</p>
+            <button
+              type="button"
+              className="visual-mode-toggle"
+              disabled={updateSettings.isPending}
+              onClick={() =>
+                updateSettings.mutate({
+                  visual_mode: settings.visual_mode === "stars" ? "notes" : "stars",
+                })
+              }
+            >
+              {settings.visual_mode === "stars" ? "📝 Back to sticky notes" : "✨ Try star jar mode"}
+            </button>
+          </section>
+
+          <section>
             <h2>Archive old weeks</h2>
             <p>Weeks older than this are hidden from your stack (nothing is deleted).</p>
             <div className="archive-picker">

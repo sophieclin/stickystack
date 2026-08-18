@@ -1,5 +1,7 @@
 export type HandwritingFont = "caveat" | "kalam" | "patrick-hand" | "shadows-into-light";
 
+export type VisualMode = "notes" | "stars";
+
 // These are plain `type` aliases (not `interface`) deliberately: @supabase/postgrest-js's
 // generic `.insert()`/`.update()` inference (via conditional types checking
 // `Relation extends { Insert: unknown }`) silently collapses to `never` when a Database
@@ -9,6 +11,7 @@ export type UserSettings = {
   archive_months: number;
   handwriting_font: HandwritingFont;
   username: string | null;
+  visual_mode: VisualMode;
 };
 
 export type Week = {

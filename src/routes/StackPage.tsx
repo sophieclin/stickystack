@@ -16,6 +16,7 @@ import { useUserSettings } from "../hooks/useUserSettings";
 import { useWeeks } from "../hooks/useWeeks";
 import { FONT_OPTIONS } from "../lib/fonts";
 import { supabase } from "../lib/supabaseClient";
+import { JarScene } from "../scene/JarScene";
 import { StackScene } from "../scene/StackScene";
 
 const UNDO_TOAST_MS = 6000;
@@ -109,7 +110,11 @@ export function StackPage() {
         </div>
 
         <div className="scene-container">
-          <StackScene notes={doneNotes} isLoading={doneNotesLoading} weeksById={weeksById} fontUrl={fontUrl} />
+          {settings?.visual_mode === "stars" ? (
+            <JarScene notes={doneNotes} isLoading={doneNotesLoading} weeksById={weeksById} />
+          ) : (
+            <StackScene notes={doneNotes} isLoading={doneNotesLoading} weeksById={weeksById} fontUrl={fontUrl} />
+          )}
           {doneNotesLoading && <p className="scene-loading">Loading stack…</p>}
         </div>
       </div>

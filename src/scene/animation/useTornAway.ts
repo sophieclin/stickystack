@@ -3,9 +3,13 @@ import { useLayoutEffect, type RefObject } from "react";
 import { Vector3, type Group, type Quaternion } from "three";
 
 /**
- * Plays once when `active` becomes true: a quick shake (selling the note
- * being gripped), then a pull-away-and-shrink along the note's own outward
- * (fan) direction, like it's being torn off the spike.
+ * Plays once when `active` becomes true: a quick shake (selling the item
+ * being gripped), then a pull-away-and-shrink along an outward direction,
+ * like it's being torn off the spike (or popped out of the jar).
+ *
+ * `outward` defaults to the note's own fan-rotation direction (the original
+ * spike behavior); pass an explicit vector (e.g. straight up) for items with
+ * no meaningful rotation-derived direction, like stars in a jar.
  */
 export function useTornAway({
   groupRef,
@@ -13,6 +17,7 @@ export function useTornAway({
   finalPosition,
   finalQuaternion,
   finalScale,
+  outward: outwardOverride,
   onComplete,
 }: {
   groupRef: RefObject<Group | null>;
@@ -20,6 +25,7 @@ export function useTornAway({
   finalPosition: Vector3;
   finalQuaternion: Quaternion;
   finalScale: number;
+  outward?: Vector3;
   onComplete: () => void;
 }) {
   useLayoutEffect(() => {
@@ -31,7 +37,8 @@ export function useTornAway({
     group.quaternion.copy(finalQuaternion);
     group.scale.setScalar(finalScale);
 
-    const outward = new Vector3(1, 0, 0).applyQuaternion(finalQuaternion).setY(0).normalize();
+    const outward =
+      outwardOverride ?? new Vector3(1, 0, 0).applyQuaternion(finalQuaternion).setY(0).normalize();
 
     const timeline = gsap.timeline({ onComplete });
     timeline

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type CSSProperties, type KeyboardEvent } from "react";
 
 const BULLET = "• ";
 
@@ -95,7 +95,7 @@ export function TodoNoteTile({
   return (
     <div
       className={`todo-tile${isSelected ? " todo-tile--selected" : ""}`}
-      style={{ backgroundColor: color }}
+      style={{ "--tile-color": color } as CSSProperties}
       onClick={onSelect}
     >
       <textarea

@@ -1,37 +1,32 @@
 import type { Note, Week } from "../types/domain";
-import { NoteMesh } from "./NoteMesh";
-import { useLifecyclePhases, type LifecyclePhase } from "./useLifecyclePhases";
+import { StarMesh } from "./StarMesh";
+import { useLifecyclePhases } from "./useLifecyclePhases";
 
-export type NotePhase = LifecyclePhase;
-
-export function NotesStack({
+export function StarsStack({
   notes,
   isLoading,
   weeksById,
-  fontUrl,
-  onNoteLanded,
+  onStarLanded,
 }: {
   notes: Note[];
   isLoading: boolean;
   weeksById: Map<string, Week>;
-  fontUrl: string;
-  onNoteLanded?: () => void;
+  onStarLanded?: () => void;
 }) {
   const { tracked, handleEntered, handleExited } = useLifecyclePhases(notes, isLoading);
 
   return (
     <>
-      {Array.from(tracked.values()).map(({ item: note, phase, index: pileIndex }) => (
-        <NoteMesh
+      {Array.from(tracked.values()).map(({ item: note, phase, index: jarIndex }) => (
+        <StarMesh
           key={note.id}
-          note={note}
+          id={note.id}
           phase={phase}
-          pileIndex={pileIndex}
+          jarIndex={jarIndex}
           color={weeksById.get(note.week_id)?.color ?? "#cccccc"}
-          fontUrl={fontUrl}
           onEntered={() => handleEntered(note.id)}
           onExited={() => handleExited(note.id)}
-          onLanded={onNoteLanded}
+          onLanded={onStarLanded}
         />
       ))}
     </>
