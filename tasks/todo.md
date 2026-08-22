@@ -23,17 +23,20 @@ accounts, before starting Phase 2.
 
 ## Phase 2 — Respond to requests, friends list, unfriend
 
-- [ ] RPC `accept_friend_request(request_id uuid)` (addressee-only, 20-friend-cap check)
-- [ ] Decline/cancel/unfriend via plain `.delete()` (no RPC needed — RLS already scopes it)
-- [ ] Hook `useFriendships` (accepted / incoming-pending / outgoing-pending)
-- [ ] Hook `useAcceptFriendRequest`
-- [ ] Hook `useRemoveFriendship` (decline/cancel/unfriend)
-- [ ] `features/friends/FriendRequests.tsx` (incoming + outgoing, mounted on `FriendsPage`)
-- [ ] `features/friends/FriendsList.tsx` (accepted friends + Unfriend, mounted on `FriendsPage`)
+- [x] RPC `accept_friend_request(request_id uuid)` (addressee-only, 20-friend-cap check)
+- [x] Decline/cancel/unfriend via plain `.delete()` (no RPC needed — RLS already scopes it)
+- [x] Hook `useFriendships` (accepted / incoming-pending / outgoing-pending)
+- [x] Hook `useAcceptFriendRequest`
+- [x] Hook `useRemoveFriendship` (decline/cancel/unfriend)
+- [x] `features/friends/FriendRequests.tsx` (incoming + outgoing, mounted on `FriendsPage`)
+- [x] `features/friends/FriendsList.tsx` (accepted friends + Unfriend, mounted on `FriendsPage`)
+- [x] Bonus (needed for display): RPC `get_friend_usernames` + wired into `useFriendships`,
+      since request/friend rows only carry ids, not usernames — **migration
+      `0005_add_friend_response_rpcs.sql` not yet applied to the live project**
 - [ ] Verify: full loop — request → accept → shows on both accounts → unfriend → gone on both
 - [ ] Verify: decline path and cancel path independently
 - [ ] Verify: 20-accepted-friend cap blocks acceptance (seed 20 rows via SQL to test)
-- [ ] `npm run build && npm run lint` clean
+- [x] `npm run build && npm run lint` clean
 
 **Checkpoint:** demo the full request/accept/decline/cancel/unfriend loop with two accounts
 before starting Phase 3.
