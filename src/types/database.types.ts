@@ -90,6 +90,14 @@ export type Database = {
         Args: { p_addressee_id: string };
         Returns: Friendship;
       };
+      accept_friend_request: {
+        Args: { p_request_id: string };
+        Returns: Friendship;
+      };
+      get_friend_usernames: {
+        Args: Record<string, never>;
+        Returns: { user_id: string; username: string }[];
+      };
     };
   };
 };

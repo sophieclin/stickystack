@@ -674,6 +674,59 @@ a {
   color: var(--danger);
 }
 
+.friend-requests {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.friend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.friend-list-empty {
+  margin: 0;
+  font-weight: 700;
+  opacity: 0.6;
+}
+
+.friend-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: var(--bw) solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: 3px 3px 0 var(--border);
+  padding: 10px 12px;
+}
+
+.friend-list-username {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.friend-list-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.friend-list-action {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.friend-list-action--danger {
+  background: var(--danger);
+  color: #fff;
+}
+
 /* History page */
 .history-stats {
   display: grid;

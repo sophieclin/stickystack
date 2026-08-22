@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { FriendRequests } from "../features/friends/FriendRequests";
 import { FriendSearch } from "../features/friends/FriendSearch";
+import { FriendsList } from "../features/friends/FriendsList";
 import { supabase } from "../lib/supabaseClient";
 
 export function FriendsPage() {
@@ -23,6 +25,16 @@ export function FriendsPage() {
       <section>
         <h2>Find a friend</h2>
         <FriendSearch />
+      </section>
+
+      <section>
+        <h2>Requests</h2>
+        <FriendRequests />
+      </section>
+
+      <section>
+        <h2>Your friends</h2>
+        <FriendsList />
       </section>
     </div>
   );
