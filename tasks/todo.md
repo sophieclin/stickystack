@@ -5,17 +5,18 @@ Full task detail, rationale, and verification steps: [plan.md](plan.md). Spec:
 
 ## Phase 1 — Find a user & send a friend request
 
-- [ ] Migration `0004_add_friendships.sql`: `friendships` table + no-self check + unique pair
-      index + RLS (select/delete only; mutations via RPC)
-- [ ] RPC `search_users(query text)`
-- [ ] RPC `send_friend_request(addressee_id uuid)` (self/duplicate/20-pending-cap checks)
-- [ ] Hook `useSearchUsers`
-- [ ] Hook `useSendFriendRequest`
-- [ ] Route `/friends` → `FriendsPage.tsx` (registered in `App.tsx`, `RequireAuth`-wrapped)
-- [ ] `features/friends/FriendSearch.tsx` (search box, results, "Add friend")
+- [x] Migration `0004_add_friendships.sql`: `friendships` table + no-self check + unique pair
+      index + RLS (select/delete only; mutations via RPC) — **not yet applied to the live
+      Supabase project; run it in the SQL editor before manual testing**
+- [x] RPC `search_users(query text)`
+- [x] RPC `send_friend_request(addressee_id uuid)` (self/duplicate/20-pending-cap checks)
+- [x] Hook `useSearchUsers`
+- [x] Hook `useSendFriendRequest`
+- [x] Route `/friends` → `FriendsPage.tsx` (registered in `App.tsx`, `RequireAuth`-wrapped)
+- [x] `features/friends/FriendSearch.tsx` (search box, results, "Add friend")
 - [ ] Verify: search excludes self, finds substring matches
 - [ ] Verify: duplicate / self / >20-pending requests all rejected with a surfaced error
-- [ ] `npm run build && npm run lint` clean
+- [x] `npm run build && npm run lint` clean
 
 **Checkpoint:** demo search → send request → row visible in Supabase table editor, with two
 accounts, before starting Phase 2.
