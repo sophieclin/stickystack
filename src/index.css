@@ -610,6 +610,70 @@ a {
   box-shadow: 1px 1px 0 var(--border);
 }
 
+/* Friend search (friends page) */
+.friend-search {
+  max-width: 420px;
+}
+
+.friend-search-input {
+  width: 100%;
+}
+
+.friend-search-results {
+  margin-top: 12px;
+  border: var(--bw) solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: 5px 5px 0 var(--border);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.friend-search-empty {
+  margin: 0;
+  padding: 8px;
+  font-weight: 700;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.friend-search-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.friend-search-row:hover {
+  background: var(--bg);
+}
+
+.friend-search-username {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.friend-search-action {
+  padding: 3px 8px;
+  font-size: 12px;
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.friend-search-action:active {
+  box-shadow: 1px 1px 0 var(--border);
+}
+
+.friend-search-error {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--danger);
+}
+
 /* History page */
 .history-stats {
   display: grid;

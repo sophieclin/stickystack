@@ -34,3 +34,19 @@ export type Note = {
   created_at: string;
   completed_at: string | null;
 };
+
+export type FriendshipStatus = "pending" | "accepted";
+
+export type Friendship = {
+  id: string;
+  requester_id: string;
+  addressee_id: string;
+  status: FriendshipStatus;
+  created_at: string;
+  responded_at: string | null;
+};
+
+export type UserSearchResult = {
+  id: string;
+  username: string;
+};

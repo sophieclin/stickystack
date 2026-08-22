@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import { queryClient } from "./lib/queryClient";
 import { ForgotPasswordPage } from "./routes/ForgotPasswordPage";
+import { FriendsPage } from "./routes/FriendsPage";
 import { HistoryPage } from "./routes/HistoryPage";
 import { HomePage } from "./routes/HomePage";
 import { LoginPage } from "./routes/LoginPage";
@@ -49,6 +50,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <HistoryPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/friends"
+              element={
+                <RequireAuth>
+                  <FriendsPage />
                 </RequireAuth>
               }
             />

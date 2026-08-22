@@ -1,4 +1,13 @@
-import type { HandwritingFont, Note, NoteStatus, VisualMode, Week } from "./domain";
+import type {
+  Friendship,
+  FriendshipStatus,
+  HandwritingFont,
+  Note,
+  NoteStatus,
+  UserSearchResult,
+  VisualMode,
+  Week,
+} from "./domain";
 
 // Hand-written, minimal Supabase database typing (no supabase CLI codegen in this environment).
 // Mirrors supabase/migrations/0001_init.sql. `Relationships`/`Views`/`Functions` are required by
@@ -57,8 +66,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      friendships: {
+        Row: Friendship;
+        Insert: {
+          requester_id: string;
+          addressee_id: string;
+          status?: FriendshipStatus;
+        };
+        Update: {
+          status?: FriendshipStatus;
+          responded_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      search_users: {
+        Args: { query: string };
+        Returns: UserSearchResult[];
+      };
+      send_friend_request: {
+        Args: { p_addressee_id: string };
+        Returns: Friendship;
+      };
+    };
   };
 };
