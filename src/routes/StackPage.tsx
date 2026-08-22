@@ -80,6 +80,7 @@ export function StackPage() {
         <div className="stack-header-right">
           <span className="stack-header-greeting">Hi, {displayName}</span>
           <Link to="/history">History</Link>
+          <Link to="/friends">Friends</Link>
           <Link to="/settings">Settings</Link>
           <button type="button" onClick={() => supabase.auth.signOut()}>
             Log out
