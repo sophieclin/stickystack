@@ -98,6 +98,24 @@ export type Database = {
         Args: Record<string, never>;
         Returns: { user_id: string; username: string }[];
       };
+      is_accepted_friend: {
+        Args: { p_other_id: string };
+        Returns: boolean;
+      };
+      get_friend_visual_mode: {
+        Args: { p_friend_id: string };
+        Returns: VisualMode;
+      };
+      get_friend_stack: {
+        Args: { p_friend_id: string };
+        Returns: {
+          id: string;
+          week_id: string;
+          week_color: string | null;
+          stack_position: number;
+          completed_at: string | null;
+        }[];
+      };
     };
   };
 };

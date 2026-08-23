@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useFriendships } from "../../hooks/useFriendships";
 import { useRemoveFriendship } from "../../hooks/useRemoveFriendship";
 
@@ -15,7 +16,9 @@ export function FriendsList() {
     <ul className="friend-list">
       {accepted.map((friendship) => (
         <li key={friendship.id} className="friend-list-row">
-          <span className="friend-list-username">{friendship.friendUsername ?? "Unknown user"}</span>
+          <Link to={`/friends/${friendship.friendId}`} className="friend-list-username">
+            {friendship.friendUsername ?? "Unknown user"}
+          </Link>
           <button
             type="button"
             className="friend-list-action friend-list-action--danger"
