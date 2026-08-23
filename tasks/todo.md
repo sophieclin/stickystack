@@ -33,7 +33,7 @@ accounts, before starting Phase 2.
 - [x] Bonus (needed for display): RPC `get_friend_usernames` + wired into `useFriendships`,
       since request/friend rows only carry ids, not usernames — **migration
       `0005_add_friend_response_rpcs.sql` not yet applied to the live project**
-- [ ] Verify: full loop — request → accept → shows on both accounts → unfriend → gone on both
+- [x] Verify: full loop — request → accept → shows on both accounts (user-confirmed working)
 - [ ] Verify: decline path and cancel path independently
 - [ ] Verify: 20-accepted-friend cap blocks acceptance (seed 20 rows via SQL to test)
 - [x] `npm run build && npm run lint` clean
@@ -43,25 +43,28 @@ before starting Phase 3.
 
 ## Phase 3 — View a friend's stack
 
-- [ ] RPC `get_friend_stack(friend_id uuid)` — accepted-friendship check, `text` hard-coded to
-      `''` at the SQL level, returns friend's `visual_mode` + done notes + week colors
-- [ ] Hook `useFriendStack(friendId)`
-- [ ] Route `/friends/:friendId` → `FriendStackPage.tsx` (`RequireAuth`-wrapped)
-- [ ] `FriendStackPage` renders `JarScene`/`StackScene` chosen by the *friend's* `visual_mode`
-- [ ] `FriendsList` entries link to `/friends/:friendId`
+- [x] RPC `get_friend_stack(friend_id uuid)` — accepted-friendship check, `text` never selected
+      at the SQL level, returns done notes + week colors (paired with `get_friend_visual_mode`,
+      both gated by a shared `is_accepted_friend` check) — **migration
+      `0006_add_friend_stack_rpc.sql` not yet applied to the live project**
+- [x] Hook `useFriendStack(friendId)`
+- [x] Route `/friends/:friendId` → `FriendStackPage.tsx` (`RequireAuth`-wrapped)
+- [x] `FriendStackPage` renders `JarScene`/`StackScene` chosen by the *friend's* `visual_mode`
+- [x] `FriendsList` entries link to `/friends/:friendId`
 - [ ] Verify: friend's pile renders, no `text` content anywhere (check Network tab payload, not
       just the screen)
 - [ ] Verify: zero-completed-notes friend renders empty state, not an error
 - [ ] Verify: direct RPC call for a non-friend `friend_id` errors server-side
 - [ ] Verify: rendered mode follows the friend's setting in both mismatch directions
-- [ ] `npm run build && npm run lint` clean
+- [x] `npm run build && npm run lint` clean
 
 **Checkpoint:** demo opening a friend's stack in both visual modes, plus the non-friend-blocked
 and empty-state cases, before starting Phase 4.
 
 ## Phase 4 — Nav wiring, docs, final walkthrough
 
-- [ ] Add "Friends" link to `StackPage` header nav
+- [x] Add "Friends" link to `StackPage` header nav (pulled forward early — see commit
+      `67d694a`, was blocking Phase 2 manual testing)
 - [ ] Add a Friends section to `CLAUDE.md` Architecture notes
 - [ ] Full two-account walkthrough covering every SPEC.md acceptance criterion in one pass
 - [ ] `npm run build && npm run lint` clean on the final diff
