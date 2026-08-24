@@ -51,8 +51,8 @@ before starting Phase 3.
 - [x] Route `/friends/:friendId` → `FriendStackPage.tsx` (`RequireAuth`-wrapped)
 - [x] `FriendStackPage` renders `JarScene`/`StackScene` chosen by the *friend's* `visual_mode`
 - [x] `FriendsList` entries link to `/friends/:friendId`
-- [ ] Verify: friend's pile renders, no `text` content anywhere (check Network tab payload, not
-      just the screen)
+- [x] Verify: friend's pile renders (user-confirmed working; Network-tab no-`text` check not
+      separately verified)
 - [ ] Verify: zero-completed-notes friend renders empty state, not an error
 - [ ] Verify: direct RPC call for a non-friend `friend_id` errors server-side
 - [ ] Verify: rendered mode follows the friend's setting in both mismatch directions
@@ -65,6 +65,10 @@ and empty-state cases, before starting Phase 4.
 
 - [x] Add "Friends" link to `StackPage` header nav (pulled forward early — see commit
       `67d694a`, was blocking Phase 2 manual testing)
-- [ ] Add a Friends section to `CLAUDE.md` Architecture notes
-- [ ] Full two-account walkthrough covering every SPEC.md acceptance criterion in one pass
-- [ ] `npm run build && npm run lint` clean on the final diff
+- [x] Add a Friends section to `CLAUDE.md` Architecture notes
+- [ ] Full two-account walkthrough covering every SPEC.md acceptance criterion in one pass —
+      core paths (search/request/accept/decline/cancel/unfriend/view-stack) are user-confirmed
+      working; not yet run as one deliberate end-to-end pass against every acceptance criterion
+      (20-friend cap, non-friend RPC rejection, zero-notes empty state, Network-tab no-`text`
+      check are still open)
+- [x] `npm run build && npm run lint` clean on the final diff

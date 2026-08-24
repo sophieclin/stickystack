@@ -49,6 +49,25 @@ Auth is a thin context (`context/AuthProvider.tsx`) wrapping `supabase.auth`; `R
 redirects unauthenticated users to `/login`. Row-level security in the migration enforces
 per-user data isolation independent of client filtering.
 
+### Friends: RPC-gated cross-user reads
+
+Every other table's RLS is strictly owner-only (`auth.uid() = user_id`). Friends is the one place
+the app reads another user's data, and it does so without ever relaxing that per-table RLS —
+instead, `security definer` Postgres RPCs (`search_users`, `send_friend_request`,
+`accept_friend_request`, `get_friend_usernames`, `get_friend_visual_mode`, `get_friend_stack` —
+spread across `supabase/migrations/0004`–`0006`) each run their own friendship/cap check before
+touching another user's row. The `friendships` table itself only has `select`/`delete` RLS
+policies; creating or accepting a request happens only through the RPCs above, so the 20-friend /
+20-pending caps and duplicate/self checks can't be bypassed by a direct insert.
+
+`get_friend_stack` is the privacy-critical one: it never selects `notes.text` at all (not even to
+null it out afterward) — there's no code path where a friend's note content can leak, by
+construction. `useFriendStack` (`hooks/useFriendStack.ts`) fills the rest of the `Note`/`Week`
+shape with placeholder values and feeds the result straight into the existing `StackScene`/
+`JarScene` — both were already generic over `(notes, weeksById)`, so viewing a friend's pile
+needed zero scene-layer changes. Which of the two renders is chosen by the *friend's*
+`visual_mode`, not the viewer's own.
+
 ### Scene: `src/scene/`
 
 `StackScene` (Canvas/lighting) → `SpikeAssembly` (base + spike + pile, owns the whole-assembly
