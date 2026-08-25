@@ -35,17 +35,19 @@ starting the highlight track.
 
 ## Phase 3 — Highlight data layer + sidebar toggle
 
-- [ ] Migration `0007_add_note_highlight.sql`: `notes.is_highlighted boolean not null default
+- [x] Migration `0007_add_note_highlight.sql`: `notes.is_highlighted boolean not null default
       false` — **not yet applied to the live Supabase project; run it in the SQL editor before
       manual testing**
-- [ ] `types/domain.ts`: `is_highlighted: boolean` added to `Note`
-- [ ] `types/database.types.ts`: `is_highlighted?: boolean` added to `notes.Update`
-- [ ] Hook `useToggleHighlight()`
-- [ ] `TodoNoteTile.tsx`: highlight toggle button + persistent indicator (visible unselected too)
-- [ ] `TodoSidebar.tsx` / `StackPage.tsx`: `onToggleHighlight` threaded through
-- [ ] Verify: toggling updates `notes.is_highlighted` in the Supabase table editor
-- [ ] Verify: indicator survives a page reload
-- [ ] `npm run build && npm run lint` clean
+- [x] `types/domain.ts`: `is_highlighted: boolean` added to `Note`
+- [x] `types/database.types.ts`: `is_highlighted?: boolean` added to `notes.Update`
+- [x] Hook `useToggleHighlight()`
+- [x] `TodoNoteTile.tsx`: highlight toggle button + persistent indicator (ring, visible
+      unselected too)
+- [x] `TodoSidebar.tsx` / `StackPage.tsx`: `onToggleHighlight` threaded through
+- [ ] Verify: toggling updates `notes.is_highlighted` in the Supabase table editor — **blocked
+      until the migration is applied to the live project**
+- [ ] Verify: indicator survives a page reload — **same block**
+- [x] `npm run build && npm run lint` clean
 
 ## Phase 4 — Highlight on done notes + 3D glow
 
