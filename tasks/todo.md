@@ -5,26 +5,30 @@ Full task detail, rationale, and verification steps: [plan.md](plan.md). Spec:
 
 ## Phase 1 — Streak badge (header)
 
-- [ ] Export `computeStreakDays(notes: Note[])` from `lib/completionStats.ts` (was private,
+- [x] Export `computeStreakDays(notes: Note[])` from `lib/completionStats.ts` (was private,
       took `Date[]`); `computeCompletionStats` calls the exported version internally
-- [ ] Streak badge UI (fire icon + count, grayscale at 0) added to `StackPage.tsx` header
-- [ ] `StackPage.tsx` calls `useCompletionHistory()` and feeds it to the badge
-- [ ] Verify: header badge number matches `HistoryPage`'s "Day streak" stat
-- [ ] Verify: streak 0 → grayscale; streak ≥ 1 → full color
-- [ ] `npm run build && npm run lint` clean
+- [x] Streak badge UI (fire icon + count, grayscale at 0) added to `StackPage.tsx` header
+- [x] `StackPage.tsx` calls `useCompletionHistory()` and feeds it to the badge
+- [ ] Verify: header badge number matches `HistoryPage`'s "Day streak" stat — **not yet
+      eyeballed in a browser, no browser tool available this session**
+- [ ] Verify: streak 0 → grayscale; streak ≥ 1 → full color — **same caveat**
+- [x] `npm run build && npm run lint` clean
 
 ## Phase 2 — Streak heatmap & longest streak
 
-- [ ] `longestStreak` added to `CompletionStats` in `lib/completionStats.ts` (full history, not
+- [x] `longestStreak` added to `CompletionStats` in `lib/completionStats.ts` (full history, not
       windowed)
-- [ ] New `lib/streakHeatmap.ts`: `computeHeatmapDays(notes, months = 12)` + intensity-bucket
+- [x] New `lib/streakHeatmap.ts`: `computeHeatmapDays(notes, months = 12)` + intensity-bucket
       helper
-- [ ] New `features/history/StreakHeatmap.tsx` (week-column grid, per-cell `title` w/ date+count)
-- [ ] `HistoryPage.tsx`: "Longest streak" stat tile + `<StreakHeatmap>` mounted
-- [ ] Verify: heavier-completion day renders visibly darker than a lighter day; zero-count day
-      stays neutral
-- [ ] Verify: seeded past streak longer than current streak → "Longest streak" reflects it
-- [ ] `npm run build && npm run lint` clean
+- [x] New `features/history/StreakHeatmap.tsx` (week-column grid, per-cell `title` w/ date+count)
+- [x] `HistoryPage.tsx`: "Longest streak" stat tile + `<StreakHeatmap>` mounted
+- [x] Verify: heavier-completion day renders visibly darker than a lighter day; zero-count day
+      stays neutral — confirmed via a standalone logic check (`computeIntensityBucket`/
+      `computeHeatmapDays` run against seeded data), not a browser eyeball
+- [x] Verify: seeded past streak longer than current streak → "Longest streak" reflects it —
+      confirmed via the same standalone check (a seeded 5-day run scored 5 independent of the
+      "current streak" definition)
+- [x] `npm run build && npm run lint` clean
 
 **Checkpoint:** demo header badge + heatmap/longest-streak together — streak track done — before
 starting the highlight track.
