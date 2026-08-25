@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { StreakHeatmap } from "../features/history/StreakHeatmap";
 import { computeCompletionStats } from "../lib/completionStats";
 import { useCompletionHistory } from "../hooks/useCompletionHistory";
 import { useUncompleteNote } from "../hooks/useUncompleteNote";
@@ -68,6 +69,10 @@ export function HistoryPage() {
                 <span>Day streak</span>
               </div>
               <div className="history-stat">
+                <strong>{stats.longestStreak}</strong>
+                <span>Longest streak</span>
+              </div>
+              <div className="history-stat">
                 <strong>{stats.busiestWeek?.count ?? "—"}</strong>
                 <span>
                   Busiest week
@@ -85,6 +90,11 @@ export function HistoryPage() {
                 </span>
               </div>
             </div>
+          </section>
+
+          <section>
+            <h2>Streak calendar</h2>
+            <StreakHeatmap notes={notes} />
           </section>
 
           <section>

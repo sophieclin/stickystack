@@ -815,6 +815,48 @@ a.friend-list-username:hover {
   clip-path: var(--star-shape);
 }
 
+.streak-heatmap {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.streak-heatmap-column {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.streak-heatmap-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+
+.streak-heatmap-cell--empty {
+  border: none;
+  background: transparent;
+}
+
+.streak-heatmap-cell--1 {
+  background: color-mix(in srgb, var(--accent) 30%, var(--panel-bg));
+}
+
+.streak-heatmap-cell--2 {
+  background: color-mix(in srgb, var(--accent) 55%, var(--panel-bg));
+}
+
+.streak-heatmap-cell--3 {
+  background: color-mix(in srgb, var(--accent) 80%, var(--panel-bg));
+}
+
+.streak-heatmap-cell--4 {
+  background: var(--accent);
+}
+
 .history-search {
   width: 100%;
   margin-bottom: 12px;
