@@ -77,15 +77,14 @@ export function HistoryPage() {
                 <span>
                   Busiest week
                   {stats.busiestWeek && (
-                    <>
-                      {" "}
+                    <span className="history-busiest-detail">
                       (
                       <span
                         className="history-week-dot"
                         style={{ backgroundColor: stats.busiestWeek.week.color ?? "#cccccc" }}
-                      />{" "}
+                      />
                       {format(new Date(stats.busiestWeek.week.start_date), "MMM d")})
-                    </>
+                    </span>
                   )}
                 </span>
               </div>
