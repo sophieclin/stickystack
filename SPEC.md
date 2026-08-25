@@ -1,137 +1,197 @@
-# SPEC: Friends & Friend Visibility
+# SPEC: Daily Streak & Highlighted Notes
 
 ## Objective
 
-Let StickyStack users become friends with each other via a request/accept flow, and let
-accepted friends view each other's completed-task pile (the receipt-spike or star jar,
-whichever visual theme the friend has active) — without ever exposing the friend's note text.
+Two independent additions to StickyStack:
+
+1. **Streak**: show the user's current daily-completion streak somewhere they'll actually see it
+   day to day, not buried on the History page — plus a heatmap calendar and longest-ever-streak
+   stat on the History page for the longer view.
+2. **Highlighted notes**: let a user mark any note (to-do or already-completed) as highlighted,
+   and make that visible as a glow in the 3D stack, whichever visual mode (spike or star jar)
+   they're using.
 
 ## Decisions locked in with the user
 
-- **Discovery/invite mechanism**: in-app username search + friend request (no email, no invite
-  links). Reuses the existing `user_settings.username` field.
-- **What's visible**: visual-only. A friend's pile/jar shape, colors, and note count are
-  visible; note `text` is never sent to the client for another user's notes.
-- **Friendship model**: two-sided (request → accept/decline), with unfriend supported. No
-  blocking in this iteration.
-- **Liveness**: no realtime. Incoming/outgoing requests are fetched on page load/refetch, same
-  as every other query in this app (React Query, no Supabase Realtime subscriptions).
-- **Username uniqueness**: left as-is (no new constraint). Search can return ambiguous/duplicate
-  usernames; results are disambiguated by picking a specific row (its `id`), same as any other
-  search-and-select list.
-- **Friend view route**: a new dedicated `FriendStackPage.tsx`, not a parameterized `StackPage`.
-- **Limits**: two independent caps of 20 per user — max 20 accepted friends, and max 20
-  outgoing pending requests in flight at once. Sending a request is blocked once outgoing-pending
-  hits 20; accepting a request (by either party) is blocked once the accepting side already has
-  20 accepted friends. Incoming pending requests aren't capped (you don't control how many people
-  request you), but accepting is still gated by your own 20-friend ceiling.
-  *(Assumption — flagging in case you meant a single combined 20 across friends+pending.)*
+- **Streak basis**: daily — the streak counts consecutive calendar days (working back from
+  today) with at least one completed task. If nothing has been marked done yet today, the
+  streak is 0 even if yesterday was completed (matches the existing strict definition below,
+  not a "grace period until midnight" definition).
+- **Streak display**: a small persistent badge in the header/nav.
+- **Streak heatmap**: on the History page, a GitHub-style contribution heatmap — a grid of the
+  last ~12 months, one cell per day, colored by that day's completion count (darker/more
+  saturated yellow = more completions that day, not just a binary "streaked or not"). Sits
+  alongside the existing stat tiles rather than a new page or popover.
+- **Longest streak**: a new "Longest streak" stat, computed over the user's *entire* completion
+  history (not just the visible 12-month heatmap window) — the longest run of consecutive
+  calendar days with at least one completion, ever.
+- **Highlight scope**: available on both active (to-do) and done notes; the flag persists
+  through a note's whole lifecycle (staying highlighted after it's speared onto the stack).
+- **Highlight look in the 3D stack**: an emissive glow/outline on the note mesh itself — no
+  color swap, no badge icon, no animation/pulsing.
+- **Naming**: "star" is already taken in this codebase (`UserSettings.visual_mode = "stars"`,
+  `StarMesh`, `StarsStack`, `JarScene` — the alternate jar-of-glowing-stars rendering). To avoid
+  colliding with that concept, this feature is called **"highlight"** everywhere — UI copy, DB
+  column (`is_highlighted`), hooks, component/prop names. Nothing here touches the existing
+  star-jar visual mode's meaning.
+
+## Grounding: a streak calculation already exists
+
+`src/lib/completionStats.ts`'s `computeCompletionStats` already computes `streakDays` (private
+helper `computeStreakDays`), consumed today only by `HistoryPage.tsx`'s "Day streak" stat tile.
+Its definition (`differenceInCalendarDays` from today, walking back while consecutive days are
+present in the completed-dates set) is exactly the daily/strict definition above. **This feature
+is mostly "surface an existing calculation in a new place," not new streak logic** — the only
+code change to the calculation itself is exporting the day-counting helper so it can be reused
+without needing a full `CompletionStats` object (see Client architecture).
 
 ## Core features & acceptance criteria
 
-### 1. Friend discovery & requests
+### 1. Streak badge
 
-- Search other users by username (case-insensitive partial match), excluding the caller.
-- Search results expose only `id` + `username` — nothing else about a non-friend is ever
-  fetched.
-- Sending a request: blocked if a pending request already exists between the pair (either
-  direction), if they're already friends, if the target is self, or if the sender already has
-  20 outgoing pending requests.
-- Recipient sees incoming pending requests next time their data loads, and can accept or
-  decline.
-- Sender can cancel a still-pending outgoing request.
-- Accepting creates a symmetric friendship; declining or canceling deletes the pending row.
-  Accepting is blocked (with a clear error) if the accepting user is already at 20 accepted
-  friends.
+- A small badge in `StackPage`'s header (next to History/Friends/Settings), showing the current
+  day streak, e.g. "🔥 5".
+- Uses the same data source and definition as `HistoryPage`'s existing "Day streak" stat —
+  completions across **all** notes regardless of week-archive status (`useCompletionHistory`,
+  not `useDoneNotes`), so the number never disagrees with History.
+- Streak of 0 still renders the badge (not hidden) so the app doesn't look broken on day one —
+  the fire icon renders grayscale (e.g. CSS `filter: grayscale(1)`) at streak 0 and full color
+  once streak ≥ 1, giving an at-a-glance "streak alive vs. not" signal without extra copy.
+- **Scope**: `StackPage` only, not `HistoryPage`/`FriendsPage`/`SettingsPage` headers.
+  *(Assumption — those pages don't share a `Header` component today, so adding it everywhere
+  would mean touching four files for a "nice to have"; flag if you want it broader.)*
 
-### 2. Friends list
+### 2. Streak heatmap & longest streak
 
-- A "Friends" page: accepted friends, plus incoming-pending and outgoing-pending sections.
-- Either side can unfriend an accepted friendship at any time; takes effect immediately for
-  both users, no confirmation step required from the other party.
-- No blocking (explicitly out of scope — see below).
+- New section on `HistoryPage`, near the existing "Stats" tiles.
+- **Heatmap**: 53-ish columns × 7 rows (weeks × weekdays), last ~12 months, one cell per
+  calendar day. Cell color intensity is bucketed from that day's completion count relative to
+  the max day-count currently in view (quartile-style buckets, the same shape as GitHub's
+  contribution graph) — 0 completions renders as a neutral empty cell (no yellow), and the
+  darkest bucket is reserved for the user's own busiest day(s) in the window, so the gradient is
+  meaningful whether someone completes 1 task/day or 15.
+- Hovering/focusing a cell shows the date and count (a native `title` attribute is enough —
+  no custom tooltip component needed).
+- **Longest streak stat**: a new tile (same style as `Total completed` / `Day streak` /
+  `Busiest week`) showing the longest-ever consecutive-day run, computed independently of the
+  current streak (a broken streak from three months ago can still be the longest-ever one).
+- Empty cells before the account existed are just empty — no special-casing needed, since a day
+  with zero notes already renders as the neutral empty cell.
 
-### 3. Viewing a friend's stack
+### 3. Highlighting a note
 
-- From the friends list, opening a friend navigates to a read-only view of their completed-task
-  pile.
-- Rendered using the **friend's own `visual_mode`** (spike-of-notes vs. star jar) — not the
-  viewer's own setting.
-- Only visual data crosses the wire: note id, status, week color, ordering/`completed_at` — no
-  `text`.
-- Reuses the existing `NotesStack` / `SpikeAssembly` / star-jar scene code, fed notes with
-  blank/null text, rather than forking the 3D scene per audience.
-- Server-side enforcement only: any non-friend pairing must be rejected by the database layer,
-  not just hidden in the UI.
-- Zero completed notes → renders the friend's empty spike/jar, not an error state.
+- To-do sidebar tile (`TodoNoteTile`): a toggle control to highlight/un-highlight, plus a
+  persistent visual indicator (e.g. a colored ring) so highlighted state is visible in the grid
+  without selecting the tile.
+- History page row (`HistoryPage`'s completed-notes list): the same toggle, next to the existing
+  "Undo" button — this is the only list-form UI a *done* note has (it otherwise only exists as a
+  3D mesh), so it's the toggle point for already-completed notes.
+- Toggling is optimistic-free (follows this repo's existing invalidate-on-success pattern, no
+  new caching approach).
+- **Out of scope for the toggle control**: clicking/tapping the note mesh directly in the 3D
+  scene. That would need raycasting/pointer-event wiring in `NotesStack`/`StarsStack` that
+  doesn't exist today — a materially bigger change than this feature warrants.
+  *(Assumption — flag if in-scene toggling was the point.)*
+
+### 4. Highlight rendering in the 3D stack
+
+- `NoteMesh` (spike/notes visual mode): highlighted notes get an emissive glow on the existing
+  `meshStandardMaterial`, layered on top of the note's normal week color — the base color never
+  changes.
+- `StarMesh` (star-jar visual mode): same treatment, so the feature behaves identically
+  regardless of which `visual_mode` the user has picked. *(Assumption — you only mentioned "the
+  stack," which could mean spike mode specifically; doing both keeps the two visual modes
+  feature-equivalent, consistent with how every other per-note feature in this app already
+  works identically in both modes.)*
+- No change to `computeNoteTransform`/`computeStarTransform` (placement is untouched — highlight
+  is a material-only change, not a layout change).
 
 ## Data model (Postgres / Supabase)
 
-- New table `public.friendships`: `id`, `requester_id uuid`, `addressee_id uuid`,
-  `status text check in ('pending','accepted')`, `created_at`, `responded_at`.
-  `check (requester_id <> addressee_id)`, plus a constraint preventing duplicate/reciprocal
-  pending rows for the same pair.
-- RLS on `friendships`: select where caller is requester or addressee; insert only as
-  requester; update (accept) only by the addressee, pending → accepted; delete (cancel /
-  decline / unfriend) by either party.
-- **No RLS relaxation on `notes` or `weeks`** — that would leak `text` at the row level. Instead,
-  a `security definer` RPC, e.g. `get_friend_stack(friend_id uuid)`, that (a) verifies an
-  accepted friendship exists between `auth.uid()` and `friend_id`, then (b) returns
-  non-archived, `status = 'done'` notes for that friend with `text` excluded (id, week_id, week
-  color, stack_position, completed_at), ordered by `stack_position`.
-- A second RPC, e.g. `search_users(query text)`, `security definer`, returning `(id, username)`
-  for username matches excluding the caller (needed since `user_settings` RLS is owner-only
-  today). No uniqueness constraint added on `username`; matches can be ambiguous and the caller
-  picks a specific `id` from the result list.
-- `get_friend_stack` (or a paired small RPC) also returns the friend's `visual_mode`, gated the
-  same way.
-- `friendships` insert/update enforce the 20-friend and 20-pending-outgoing caps (via a
-  `security definer` RPC doing the count-and-insert atomically, rather than a plain client-side
-  insert, to avoid a race past the cap).
+- Migration `0007_add_note_highlight.sql`: `alter table public.notes add column is_highlighted
+  boolean not null default false;`
+- **No RLS change** — the existing "update own notes" policy (`auth.uid() = user_id`) already
+  permits updating any column on a caller's own note, including a new one.
+- **No new table, no new RPC** — unlike Friends, this never touches another user's row.
 
 ## Client architecture
 
-- New hooks under `src/hooks/`: `useSearchUsers`, `useSendFriendRequest`,
-  `useRespondToFriendRequest` (accept/decline), `useRemoveFriendship` (covers cancel / decline /
-  unfriend — same underlying delete), `useFriendships` (accepted + pending-incoming +
-  pending-outgoing from one query), `useFriendStack(friendId)`.
-- New routes: `src/routes/FriendsPage.tsx` (search, requests, friends list) and
-  `src/routes/FriendStackPage.tsx` (read-only stack view, separate from `StackPage`).
-- `NoteMesh`'s text path must tolerate `text: null` for friend-viewed notes (render blank rather
-  than erroring in troika-three-text).
-- Mutations invalidate a `["friendships", userId]` query key on success, matching this repo's
-  existing invalidate-on-success pattern (no optimistic cache writes).
+- `types/domain.ts`: add `is_highlighted: boolean` to `Note`.
+- `types/database.types.ts`: add `is_highlighted?: boolean` to the `notes.Update` shape (`Row`
+  already covers it via the `Note` type alias).
+- `lib/completionStats.ts`: export the day-counting helper (rename/export
+  `computeStreakDays`, changed to accept `Note[]` directly like the rest of this module's public
+  surface, rather than a pre-mapped `Date[]`) so both `computeCompletionStats` and the new header
+  badge can call it without duplicating the date-parsing logic. Add `longestStreak` to
+  `CompletionStats` (max consecutive-run length over the full sorted set of completion days —
+  same "consecutive calendar days" building block as `computeStreakDays`, just scanning forward
+  over history instead of walking back from today).
+- New `lib/streakHeatmap.ts`: `computeHeatmapDays(notes: Note[], months = 12): { date: string;
+  count: number }[]` — one entry per day in the window (including zero-count days, so the grid
+  component doesn't need to backfill gaps itself) — plus a small bucketing helper that turns a
+  count into an intensity level (0–4) given the window's max count.
+- New `features/history/StreakHeatmap.tsx`: pure presentational grid component consuming
+  `computeHeatmapDays`'s output, mounted on `HistoryPage`.
+- New hook `useToggleHighlight()`: mirrors `useCompleteNote`'s shape — mutation takes `{ id,
+  isHighlighted }`, updates the one column, invalidates `["notes"]` on success.
+- `StackPage.tsx`: call `useCompletionHistory()` (already used elsewhere, same cached query key
+  `["notes", "history", userId]`, so this is a cache hit after `HistoryPage` has ever loaded —
+  and a normal fetch otherwise) and render a streak badge in the header using the exported
+  helper.
+- `TodoNoteTile.tsx`: new highlight toggle button + indicator, wired through `TodoSidebar` →
+  `StackPage` the same way `onMarkDone`/`onDelete` already are.
+- `HistoryPage.tsx`: new highlight toggle button per row, using `useToggleHighlight`.
+- `NoteMesh.tsx`: read `note.is_highlighted` (already flows through — `NotesStack` already
+  passes the whole `note` object) and conditionally set `emissive`/`emissiveIntensity` on the
+  material.
+- `StarMesh.tsx` + `StarsStack.tsx`: `StarsStack` already holds the full `note` in its tracked
+  map; thread a new `isHighlighted` prop into `StarMesh` (which today only receives primitives —
+  `id`/`color`/etc., not the whole note) and apply the same emissive treatment.
 
 ## Explicit boundaries
 
-- **Always**: enforce friendship checks server-side (RLS/RPC) — never rely on the client to hide
-  another user's data; keep `text` out of every friend-facing query/RPC response, by construction
-  (column never selected), not by client-side stripping.
-- **Ask first**: any change to existing RLS policies on `notes` / `weeks` / `user_settings`;
-  adding a uniqueness constraint on `username` (existing rows may be null or collide — needs a
-  backfill/migration decision); introducing Supabase Realtime (explicitly deferred).
-- **Never**: send a friend's active (not-yet-done) notes or note text to another user; expose
-  non-friend user data beyond `id` + `username` via search; add blocking/reporting this
-  iteration; add push/email notifications for requests.
+- **Always**: keep "highlight" terminology out of anything that could be confused with the
+  existing star-jar `visual_mode`; reuse the existing streak definition rather than inventing a
+  second one; follow the existing invalidate-on-success mutation pattern (no optimistic writes).
+- **Ask first**: adding the streak badge to any header besides `StackPage`'s; adding in-3D-scene
+  click-to-highlight; changing the streak definition (e.g. a grace period, or counting weeks
+  instead of days) — all called out as assumptions above.
+- **Never**: add a new RLS policy or RPC for this (it's owner-only data, the existing policy
+  already covers it); change `computeNoteTransform`/`computeStarTransform` placement logic;
+  touch the `visual_mode` setting or its meaning.
 
 ## Out of scope (this iteration)
 
-- Blocking or reporting users.
-- Realtime updates/badges for incoming requests.
-- Email- or link-based invites for people without an existing account.
-- Viewing a friend's *active* to-do list (only the completed pile is shared).
-- Any opt-out/privacy toggle for being found or friended.
+- Streak freeze/grace periods, or streak-loss notifications.
+- Heatmap windows longer than ~12 months, month-by-month pagination/navigation of the heatmap,
+  or a heatmap on any page besides History.
+- Filtering the to-do sidebar or History list by highlighted status.
+- Any highlight-related change to the Friends stack view (a friend's highlighted notes are not
+  specifically called out — `get_friend_stack` already excludes everything except id/week/color/
+  position/completed_at, and this spec doesn't ask to extend it).
 
 ## Testing strategy
 
-- No test suite exists in this repo today. Manual verification via `npm run dev`: search →
-  request → accept (as the other account) → view friend's stack in both visual modes → unfriend
-  → re-request.
-- SQL-level checks: confirm RLS/RPC denies `get_friend_stack` for a non-friend, and confirm the
-  RPC's return shape has no `text` column at all (not just a null value).
+- No test suite in this repo. Manual verification via `npm run dev`:
+  - Mark a task done today → header badge shows streak ≥ 1, matches `HistoryPage`'s "Day
+    streak" stat exactly.
+  - Skip a day (or fake it by checking the definition against seeded `completed_at` values in
+    the SQL editor) → streak resets to 0.
+  - Complete several tasks on one day, one task on another → heatmap shows the heavier day in a
+    visibly darker cell than the lighter day; a day with zero completions stays neutral.
+  - Seed a past multi-day run longer than the current streak (via `completed_at` in the SQL
+    editor) → "Longest streak" reflects that past run even though the *current* streak (header
+    badge) is shorter or zero.
+  - Highlight a to-do note → indicator shows in the sidebar tile; mark it done → it lands on the
+    stack already glowing, no separate action needed.
+  - Highlight a note directly from the History list → glow appears on its existing stack mesh
+    without a page reload (query invalidation triggers a refetch).
+  - Toggle `visual_mode` between spike and star-jar with a highlighted note present → glow shows
+    in both.
+  - Un-highlight → glow disappears; toggling is idempotent (no drift after several toggles).
 
 ## Commands
 
 Unchanged from repo root (`npm run dev`, `npm run build`, `npm run lint`). New migration file
-added under `supabase/migrations/0004_add_friendships.sql`, applied via the Supabase SQL editor
-per the README's existing convention.
+added under `supabase/migrations/0007_add_note_highlight.sql`, applied via the Supabase SQL
+editor per the README's existing convention.
