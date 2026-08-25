@@ -33,6 +33,7 @@ export type Note = {
   stack_position: number;
   created_at: string;
   completed_at: string | null;
+  is_highlighted: boolean;
 };
 
 export type FriendshipStatus = "pending" | "accepted";

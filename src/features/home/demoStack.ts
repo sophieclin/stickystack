@@ -57,6 +57,7 @@ export const DEMO_NOTES: Note[] = DEMO_WEEKS.flatMap((week, w) =>
       stack_position: index,
       created_at: week.created_at,
       completed_at: week.created_at,
+      is_highlighted: false,
     };
   }),
 );

@@ -13,6 +13,7 @@ export function TodoSidebar({
   onTextChange,
   onMarkDone,
   onDelete,
+  onToggleHighlight,
 }: {
   notes: Note[];
   weeksById: Map<string, Week>;
@@ -24,6 +25,7 @@ export function TodoSidebar({
   onTextChange: (id: string, text: string) => void;
   onMarkDone: (id: string, text: string) => void;
   onDelete: (id: string) => void;
+  onToggleHighlight: (id: string, isHighlighted: boolean) => void;
 }) {
   const [query, setQuery] = useState("");
 
@@ -66,6 +68,7 @@ export function TodoSidebar({
               text={note.text}
               color={weeksById.get(note.week_id)?.color ?? "#cccccc"}
               isSelected={selectedId === note.id}
+              isHighlighted={note.is_highlighted}
               onSelect={() => onSelect(note.id)}
               onTextChange={(text) => onTextChange(note.id, text)}
               onMarkDone={(text) => {
@@ -76,6 +79,7 @@ export function TodoSidebar({
                 onDelete(note.id);
                 onSelect(null);
               }}
+              onToggleHighlight={() => onToggleHighlight(note.id, !note.is_highlighted)}
             />
           ))}
         </div>

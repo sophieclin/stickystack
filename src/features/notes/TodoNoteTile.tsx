@@ -10,18 +10,22 @@ export function TodoNoteTile({
   text,
   color,
   isSelected,
+  isHighlighted,
   onSelect,
   onTextChange,
   onMarkDone,
   onDelete,
+  onToggleHighlight,
 }: {
   text: string;
   color: string;
   isSelected: boolean;
+  isHighlighted: boolean;
   onSelect: () => void;
   onTextChange: (text: string) => void;
   onMarkDone: (text: string) => void;
   onDelete: () => void;
+  onToggleHighlight: () => void;
 }) {
   const [localText, setLocalText] = useState(text);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -94,7 +98,7 @@ export function TodoNoteTile({
 
   return (
     <div
-      className={`todo-tile${isSelected ? " todo-tile--selected" : ""}`}
+      className={`todo-tile${isSelected ? " todo-tile--selected" : ""}${isHighlighted ? " todo-tile--highlighted" : ""}`}
       style={{ "--tile-color": color } as CSSProperties}
       onClick={onSelect}
     >
@@ -110,6 +114,19 @@ export function TodoNoteTile({
       />
       {isSelected && (
         <>
+          <button
+            type="button"
+            className={`todo-tile-highlight${isHighlighted ? " todo-tile-highlight--active" : ""}`}
+            title={isHighlighted ? "Remove highlight" : "Highlight task"}
+            aria-label={isHighlighted ? "Remove highlight" : "Highlight task"}
+            aria-pressed={isHighlighted}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleHighlight();
+            }}
+          >
+            ★
+          </button>
           <button
             type="button"
             className="todo-tile-delete"

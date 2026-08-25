@@ -11,6 +11,7 @@ import { useCompletionHistory } from "../hooks/useCompletionHistory";
 import { useCurrentWeek } from "../hooks/useCurrentWeek";
 import { useDeleteNote } from "../hooks/useDeleteNote";
 import { useDoneNotes } from "../hooks/useDoneNotes";
+import { useToggleHighlight } from "../hooks/useToggleHighlight";
 import { useUncompleteNote } from "../hooks/useUncompleteNote";
 import { useUpdateNoteText } from "../hooks/useUpdateNoteText";
 import { useUserSettings } from "../hooks/useUserSettings";
@@ -43,6 +44,7 @@ export function StackPage() {
   const uncompleteNote = useUncompleteNote();
   const deleteNote = useDeleteNote();
   const updateNoteText = useUpdateNoteText();
+  const toggleHighlight = useToggleHighlight();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [undoToast, setUndoToast] = useState<{ id: string; text: string } | null>(null);
   const undoTimeoutRef = useRef<number | null>(null);
@@ -120,6 +122,7 @@ export function StackPage() {
             onTextChange={(id, text) => updateNoteText.mutate({ id, text })}
             onMarkDone={handleMarkDone}
             onDelete={(id) => deleteNote.mutate(id)}
+            onToggleHighlight={(id, isHighlighted) => toggleHighlight.mutate({ id, isHighlighted })}
           />
         </div>
 

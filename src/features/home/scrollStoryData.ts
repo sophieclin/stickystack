@@ -56,5 +56,6 @@ export function pointToNote(point: ScrollStoryPoint, pileIndex: number): Note {
     stack_position: pileIndex,
     created_at: NOW,
     completed_at: NOW,
+    is_highlighted: false,
   };
 }

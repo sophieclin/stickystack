@@ -43,6 +43,7 @@ export function useFriendStack(friendId: string | undefined) {
         stack_position: row.stack_position,
         created_at: row.completed_at ?? "",
         completed_at: row.completed_at,
+        is_highlighted: false,
       })),
     [stackQuery.data, friendId],
   );

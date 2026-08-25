@@ -63,6 +63,7 @@ export type Database = {
           text?: string;
           status?: NoteStatus;
           completed_at?: string | null;
+          is_highlighted?: boolean;
         };
         Relationships: [];
       };
