@@ -7,6 +7,7 @@ import { TodoSidebar } from "../features/notes/TodoSidebar";
 import { useActiveNotes } from "../hooks/useActiveNotes";
 import { useAddNote } from "../hooks/useAddNote";
 import { useCompleteNote } from "../hooks/useCompleteNote";
+import { useCompletionHistory } from "../hooks/useCompletionHistory";
 import { useCurrentWeek } from "../hooks/useCurrentWeek";
 import { useDeleteNote } from "../hooks/useDeleteNote";
 import { useDoneNotes } from "../hooks/useDoneNotes";
@@ -14,6 +15,7 @@ import { useUncompleteNote } from "../hooks/useUncompleteNote";
 import { useUpdateNoteText } from "../hooks/useUpdateNoteText";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useWeeks } from "../hooks/useWeeks";
+import { computeStreakDays } from "../lib/completionStats";
 import { FONT_OPTIONS } from "../lib/fonts";
 import { supabase } from "../lib/supabaseClient";
 import { JarScene } from "../scene/JarScene";
@@ -32,6 +34,8 @@ export function StackPage() {
   const { week, isLoading: weekLoading, setColor } = useCurrentWeek();
   const { notes: activeNotes } = useActiveNotes();
   const { notes: doneNotes, isLoading: doneNotesLoading } = useDoneNotes();
+  const { notes: completionHistory } = useCompletionHistory();
+  const streakDays = useMemo(() => computeStreakDays(completionHistory), [completionHistory]);
   const weeksQuery = useWeeks();
   const { data: settings } = useUserSettings();
   const addNote = useAddNote();
@@ -78,6 +82,15 @@ export function StackPage() {
         </h1>
         <GlobalSearch />
         <div className="stack-header-right">
+          <span
+            className={`streak-badge${streakDays === 0 ? " streak-badge--zero" : ""}`}
+            title={`${streakDays}-day streak`}
+          >
+            <span className="streak-badge-icon" aria-hidden="true">
+              🔥
+            </span>
+            {streakDays}
+          </span>
           <span className="stack-header-greeting">Hi, {displayName}</span>
           <Link to="/history">History</Link>
           <Link to="/friends">Friends</Link>
