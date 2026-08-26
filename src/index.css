@@ -496,6 +496,10 @@ a {
   outline: none;
 }
 
+.todo-tile--selected .todo-tile-text {
+  padding-top: 28px;
+}
+
 .todo-tile-done {
   position: absolute;
   bottom: 6px;
@@ -518,15 +522,14 @@ a {
   padding: 0;
   border-radius: 50%;
   background: var(--panel-bg);
-  color: var(--border);
-  font-size: 13px;
+  color: var(--text);
+  font-size: 14px;
   line-height: 1;
   box-shadow: 2px 2px 0 var(--border);
 }
 
 .todo-tile-highlight--active {
-  background: var(--accent);
-  color: var(--accent-text);
+  color: var(--accent);
 }
 
 .todo-tile-highlight:active {

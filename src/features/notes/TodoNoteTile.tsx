@@ -125,7 +125,7 @@ export function TodoNoteTile({
               onToggleHighlight();
             }}
           >
-            ★
+            {isHighlighted ? "★" : "☆"}
           </button>
           <button
             type="button"
