@@ -51,15 +51,16 @@ starting the highlight track.
 
 ## Phase 4 — Highlight on done notes + 3D glow
 
-- [ ] `HistoryPage.tsx`: highlight toggle button per row, next to "Undo"
-- [ ] `NoteMesh.tsx`: emissive glow when `note.is_highlighted`
-- [ ] `StarsStack.tsx`: `isHighlighted` prop threaded into `<StarMesh>`
-- [ ] `StarMesh.tsx`: accepts `isHighlighted`, same emissive treatment
-- [ ] Verify: highlight a to-do note → mark done → lands on stack already glowing
-- [ ] Verify: toggle from History list → glow updates on the live mesh, no reload needed
-- [ ] Verify: glow renders correctly in both `visual_mode`s (spike and star-jar)
-- [ ] Verify: un-highlight removes glow; repeated toggling doesn't drift
-- [ ] `npm run build && npm run lint` clean
+- [x] `HistoryPage.tsx`: highlight toggle button per row, next to "Undo"
+- [x] `NoteMesh.tsx`: emissive glow when `note.is_highlighted`
+- [x] `StarsStack.tsx`: `isHighlighted` prop threaded into `<StarMesh>`
+- [x] `StarMesh.tsx`: accepts `isHighlighted`, same emissive treatment
+- [ ] Verify: highlight a to-do note → mark done → lands on stack already glowing — **not yet
+      eyeballed in a browser this session**
+- [ ] Verify: toggle from History list → glow updates on the live mesh, no reload needed — same
+- [ ] Verify: glow renders correctly in both `visual_mode`s (spike and star-jar) — same
+- [ ] Verify: un-highlight removes glow; repeated toggling doesn't drift — same
+- [x] `npm run build && npm run lint` clean
 
 **Checkpoint:** demo full highlight lifecycle (sidebar → done → glow in both visual modes →
 un-highlight) before starting Phase 5.
