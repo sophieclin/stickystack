@@ -55,11 +55,14 @@ starting the highlight track.
 - [x] `NoteMesh.tsx`: emissive glow when `note.is_highlighted`
 - [x] `StarsStack.tsx`: `isHighlighted` prop threaded into `<StarMesh>`
 - [x] `StarMesh.tsx`: accepts `isHighlighted`, same emissive treatment
-- [ ] Verify: highlight a to-do note → mark done → lands on stack already glowing — **not yet
-      eyeballed in a browser this session**
-- [ ] Verify: toggle from History list → glow updates on the live mesh, no reload needed — same
-- [ ] Verify: glow renders correctly in both `visual_mode`s (spike and star-jar) — same
-- [ ] Verify: un-highlight removes glow; repeated toggling doesn't drift — same
+- [x] Verify: highlighted note glows on the spike — confirmed by user via screenshot, went
+      through two rounds of visual tuning (ring texture, scale, opacity) before landing here
+- [ ] Verify: toggle from History list → glow updates on the live mesh, no reload needed — not
+      specifically confirmed yet
+- [ ] Verify: glow renders correctly in star-jar `visual_mode`, not just spike — not confirmed
+      yet (glow mechanism differs — StarMesh uses a backface-outline trick, NoteMesh uses the
+      new alpha-ring texture — so this isn't guaranteed by the spike-mode check above)
+- [ ] Verify: un-highlight removes glow; repeated toggling doesn't drift — not confirmed yet
 - [x] `npm run build && npm run lint` clean
 
 **Checkpoint:** demo full highlight lifecycle (sidebar → done → glow in both visual modes →
