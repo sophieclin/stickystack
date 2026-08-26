@@ -1,9 +1,9 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
-import { Vector3, type Group } from "three";
+import { AdditiveBlending, BackSide, Vector3, type Group } from "three";
 import type { LifecyclePhase } from "./useLifecyclePhases";
 import { useSpearAndSettle } from "./animation/useSpearAndSettle";
 import { useTornAway } from "./animation/useTornAway";
-import { HIGHLIGHT_EMISSIVE_COLOR, HIGHLIGHT_EMISSIVE_INTENSITY } from "./constants";
+import { HIGHLIGHT_GLOW_COLOR, HIGHLIGHT_GLOW_OPACITY, HIGHLIGHT_GLOW_SCALE } from "./constants";
 import { starGeometry } from "./geometry/starGeometry";
 import { computeStarTransform } from "./transform/computeStarTransform";
 
@@ -68,14 +68,20 @@ export function StarMesh({
 
   return (
     <group ref={groupRef}>
+      {isHighlighted && (
+        <mesh geometry={starGeometry} scale={HIGHLIGHT_GLOW_SCALE}>
+          <meshBasicMaterial
+            color={HIGHLIGHT_GLOW_COLOR}
+            side={BackSide}
+            transparent
+            opacity={HIGHLIGHT_GLOW_OPACITY}
+            blending={AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
       <mesh geometry={starGeometry} castShadow receiveShadow>
-        <meshStandardMaterial
-          color={color}
-          roughness={0.35}
-          metalness={0.4}
-          emissive={isHighlighted ? HIGHLIGHT_EMISSIVE_COLOR : "#000000"}
-          emissiveIntensity={isHighlighted ? HIGHLIGHT_EMISSIVE_INTENSITY : 0}
-        />
+        <meshStandardMaterial color={color} roughness={0.35} metalness={0.4} />
       </mesh>
     </group>
   );

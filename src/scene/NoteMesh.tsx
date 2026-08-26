@@ -1,12 +1,19 @@
 import { Text } from "@react-three/drei";
 import { useLayoutEffect, useMemo, useRef } from "react";
-import { DoubleSide, type Group } from "three";
+import { AdditiveBlending, DoubleSide, type Group } from "three";
 import type { Note } from "../types/domain";
 import { useSpearAndSettle } from "./animation/useSpearAndSettle";
 import { useTornAway } from "./animation/useTornAway";
-import { HIGHLIGHT_EMISSIVE_COLOR, HIGHLIGHT_EMISSIVE_INTENSITY, NOTE_SIZE } from "./constants";
+import {
+  HIGHLIGHT_GLOW_COLOR,
+  HIGHLIGHT_GLOW_OPACITY,
+  HIGHLIGHT_GLOW_SCALE,
+  NOTE_GLOW_Y_OFFSET,
+  NOTE_SIZE,
+} from "./constants";
 import { curledNoteGeometry } from "./geometry/curledNoteGeometry";
 import type { NotePhase } from "./NotesStack";
+import { glowRingTexture } from "./textures/glowRingTexture";
 import { computeNoteTransform } from "./transform/computeNoteTransform";
 
 export function NoteMesh({
@@ -66,15 +73,25 @@ export function NoteMesh({
 
   return (
     <group ref={groupRef}>
+      {note.is_highlighted && (
+        <mesh
+          geometry={curledNoteGeometry}
+          position={[0, NOTE_GLOW_Y_OFFSET, 0]}
+          scale={HIGHLIGHT_GLOW_SCALE}
+        >
+          <meshBasicMaterial
+            color={HIGHLIGHT_GLOW_COLOR}
+            alphaMap={glowRingTexture}
+            side={DoubleSide}
+            transparent
+            opacity={HIGHLIGHT_GLOW_OPACITY}
+            blending={AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
       <mesh geometry={curledNoteGeometry} castShadow receiveShadow>
-        <meshStandardMaterial
-          color={color}
-          roughness={0.88}
-          metalness={0}
-          side={DoubleSide}
-          emissive={note.is_highlighted ? HIGHLIGHT_EMISSIVE_COLOR : "#000000"}
-          emissiveIntensity={note.is_highlighted ? HIGHLIGHT_EMISSIVE_INTENSITY : 0}
-        />
+        <meshStandardMaterial color={color} roughness={0.88} metalness={0} side={DoubleSide} />
       </mesh>
       <Text
         position={[0, 0.007, 0]}
