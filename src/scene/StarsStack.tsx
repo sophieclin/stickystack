@@ -24,6 +24,7 @@ export function StarsStack({
           phase={phase}
           jarIndex={jarIndex}
           color={weeksById.get(note.week_id)?.color ?? "#cccccc"}
+          isHighlighted={note.is_highlighted}
           onEntered={() => handleEntered(note.id)}
           onExited={() => handleExited(note.id)}
           onLanded={onStarLanded}

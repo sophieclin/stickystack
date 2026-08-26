@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { StreakHeatmap } from "../features/history/StreakHeatmap";
 import { computeCompletionStats } from "../lib/completionStats";
 import { useCompletionHistory } from "../hooks/useCompletionHistory";
+import { useToggleHighlight } from "../hooks/useToggleHighlight";
 import { useUncompleteNote } from "../hooks/useUncompleteNote";
 import { useWeeks } from "../hooks/useWeeks";
 import { supabase } from "../lib/supabaseClient";
@@ -12,6 +13,7 @@ export function HistoryPage() {
   const { notes, isLoading } = useCompletionHistory();
   const weeksQuery = useWeeks();
   const uncompleteNote = useUncompleteNote();
+  const toggleHighlight = useToggleHighlight();
   const [query, setQuery] = useState("");
 
   const weeksById = useMemo(
@@ -122,6 +124,19 @@ export function HistoryPage() {
                     <span className="history-row-date">
                       {note.completed_at ? format(new Date(note.completed_at), "MMM d, yyyy") : ""}
                     </span>
+                    <button
+                      type="button"
+                      className={`history-row-highlight${note.is_highlighted ? " history-row-highlight--active" : ""}`}
+                      title={note.is_highlighted ? "Remove highlight" : "Highlight task"}
+                      aria-label={note.is_highlighted ? "Remove highlight" : "Highlight task"}
+                      aria-pressed={note.is_highlighted}
+                      disabled={toggleHighlight.isPending}
+                      onClick={() =>
+                        toggleHighlight.mutate({ id: note.id, isHighlighted: !note.is_highlighted })
+                      }
+                    >
+                      {note.is_highlighted ? "★" : "☆"}
+                    </button>
                     <button
                       type="button"
                       className="history-row-undo"

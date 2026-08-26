@@ -13,3 +13,8 @@ export const NOTE_SIZE = 0.66;
 export const NOTE_HEIGHT_STEP = 0.008;
 export const NOTE_HEIGHT_JITTER = 0.0025;
 export const NOTE_CURL_AMOUNT = 0.035;
+
+// Shared by NoteMesh and StarMesh so a highlighted note glows the same way
+// regardless of visual mode. Matches the --accent yellow used elsewhere in the app.
+export const HIGHLIGHT_EMISSIVE_COLOR = "#ffd400";
+export const HIGHLIGHT_EMISSIVE_INTENSITY = 0.6;

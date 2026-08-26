@@ -936,6 +936,20 @@ a.friend-list-username:hover {
   white-space: nowrap;
 }
 
+.history-row-highlight {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.history-row-highlight--active {
+  color: var(--accent);
+}
+
 .history-row-undo {
   padding: 4px 10px;
   font-size: 13px;

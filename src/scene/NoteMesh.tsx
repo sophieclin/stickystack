@@ -4,7 +4,7 @@ import { DoubleSide, type Group } from "three";
 import type { Note } from "../types/domain";
 import { useSpearAndSettle } from "./animation/useSpearAndSettle";
 import { useTornAway } from "./animation/useTornAway";
-import { NOTE_SIZE } from "./constants";
+import { HIGHLIGHT_EMISSIVE_COLOR, HIGHLIGHT_EMISSIVE_INTENSITY, NOTE_SIZE } from "./constants";
 import { curledNoteGeometry } from "./geometry/curledNoteGeometry";
 import type { NotePhase } from "./NotesStack";
 import { computeNoteTransform } from "./transform/computeNoteTransform";
@@ -67,7 +67,14 @@ export function NoteMesh({
   return (
     <group ref={groupRef}>
       <mesh geometry={curledNoteGeometry} castShadow receiveShadow>
-        <meshStandardMaterial color={color} roughness={0.88} metalness={0} side={DoubleSide} />
+        <meshStandardMaterial
+          color={color}
+          roughness={0.88}
+          metalness={0}
+          side={DoubleSide}
+          emissive={note.is_highlighted ? HIGHLIGHT_EMISSIVE_COLOR : "#000000"}
+          emissiveIntensity={note.is_highlighted ? HIGHLIGHT_EMISSIVE_INTENSITY : 0}
+        />
       </mesh>
       <Text
         position={[0, 0.007, 0]}
