@@ -1,10 +1,11 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
-import { AdditiveBlending, BackSide, Vector3, type Group } from "three";
+import { Vector3, type Group } from "three";
 import type { LifecyclePhase } from "./useLifecyclePhases";
 import { useSpearAndSettle } from "./animation/useSpearAndSettle";
 import { useTornAway } from "./animation/useTornAway";
-import { HIGHLIGHT_GLOW_COLOR, HIGHLIGHT_GLOW_OPACITY, HIGHLIGHT_GLOW_SCALE } from "./constants";
+import { STAR_GLOW_SHELL_SCALE } from "./constants";
 import { starGeometry } from "./geometry/starGeometry";
+import { fresnelGlowMaterial } from "./materials/fresnelGlowMaterial";
 import { computeStarTransform } from "./transform/computeStarTransform";
 
 // Pure vertical lift on exit — a star has no fan-rotation axis to pull away
@@ -69,16 +70,7 @@ export function StarMesh({
   return (
     <group ref={groupRef}>
       {isHighlighted && (
-        <mesh geometry={starGeometry} scale={HIGHLIGHT_GLOW_SCALE}>
-          <meshBasicMaterial
-            color={HIGHLIGHT_GLOW_COLOR}
-            side={BackSide}
-            transparent
-            opacity={HIGHLIGHT_GLOW_OPACITY}
-            blending={AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
+        <mesh geometry={starGeometry} scale={STAR_GLOW_SHELL_SCALE} material={fresnelGlowMaterial} />
       )}
       <mesh geometry={starGeometry} castShadow receiveShadow>
         <meshStandardMaterial color={color} roughness={0.35} metalness={0.4} />

@@ -7,7 +7,7 @@ import { useTornAway } from "./animation/useTornAway";
 import {
   HIGHLIGHT_GLOW_COLOR,
   HIGHLIGHT_GLOW_OPACITY,
-  HIGHLIGHT_GLOW_SCALE,
+  NOTE_GLOW_SCALE,
   NOTE_GLOW_Y_OFFSET,
   NOTE_SIZE,
 } from "./constants";
@@ -77,7 +77,7 @@ export function NoteMesh({
         <mesh
           geometry={curledNoteGeometry}
           position={[0, NOTE_GLOW_Y_OFFSET, 0]}
-          scale={HIGHLIGHT_GLOW_SCALE}
+          scale={NOTE_GLOW_SCALE}
         >
           <meshBasicMaterial
             color={HIGHLIGHT_GLOW_COLOR}
