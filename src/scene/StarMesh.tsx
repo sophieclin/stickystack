@@ -69,7 +69,16 @@ export function StarMesh({
   return (
     <group ref={groupRef}>
       {isHighlighted && (
-        <mesh geometry={starGeometry} scale={HIGHLIGHT_GLOW_SCALE}>
+        // renderOrder forces this to draw after the jar's glass (Jar.tsx, default
+        // renderOrder 0). depthTest={false} is the part that actually matters here,
+        // though: Jar.tsx's glass material never sets depthWrite={false}, so despite
+        // being transparent it still writes to the depth buffer — a star viewed
+        // through the glass fails the depth test against that and gets silently
+        // discarded. Skipping the depth test lets the glow read through the glass
+        // the way a highlight indicator should, at the cost of also reading through
+        // any genuinely nearer opaque object — an acceptable trade for a "make this
+        // easy to spot" effect.
+        <mesh geometry={starGeometry} scale={HIGHLIGHT_GLOW_SCALE} renderOrder={1}>
           <meshBasicMaterial
             color={HIGHLIGHT_GLOW_COLOR}
             side={BackSide}
@@ -77,6 +86,7 @@ export function StarMesh({
             opacity={HIGHLIGHT_GLOW_OPACITY}
             blending={AdditiveBlending}
             depthWrite={false}
+            depthTest={false}
           />
         </mesh>
       )}
