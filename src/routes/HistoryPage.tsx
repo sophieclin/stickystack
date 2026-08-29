@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { StreakHeatmap } from "../features/history/StreakHeatmap";
-import { HighlightOnlyToggle } from "../features/notes/HighlightOnlyToggle";
 import { computeCompletionStats } from "../lib/completionStats";
 import { useCompletionHistory } from "../hooks/useCompletionHistory";
 import { useToggleHighlight } from "../hooks/useToggleHighlight";
@@ -16,7 +15,6 @@ export function HistoryPage() {
   const uncompleteNote = useUncompleteNote();
   const toggleHighlight = useToggleHighlight();
   const [query, setQuery] = useState("");
-  const [highlightedOnly, setHighlightedOnly] = useState(false);
 
   const weeksById = useMemo(
     () => new Map(weeksQuery.data?.map((w) => [w.id, w]) ?? []),
@@ -27,10 +25,9 @@ export function HistoryPage() {
 
   const filteredNotes = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return notes
-      .filter((n) => !q || n.text.toLowerCase().includes(q))
-      .filter((n) => !highlightedOnly || n.is_highlighted);
-  }, [notes, query, highlightedOnly]);
+    if (!q) return notes;
+    return notes.filter((n) => n.text.toLowerCase().includes(q));
+  }, [notes, query]);
 
   return (
     <div className="settings-page">
@@ -103,16 +100,13 @@ export function HistoryPage() {
 
           <section>
             <h2>Completed tasks</h2>
-            <div className="history-search-row">
-              <input
-                type="text"
-                className="history-search"
-                placeholder="Search completed tasks…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <HighlightOnlyToggle active={highlightedOnly} onToggle={() => setHighlightedOnly((v) => !v)} />
-            </div>
+            <input
+              type="text"
+              className="history-search"
+              placeholder="Search completed tasks…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
 
             {filteredNotes.length === 0 ? (
               <p className="todo-empty">

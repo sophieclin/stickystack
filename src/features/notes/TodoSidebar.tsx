@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import type { Note, Week } from "../../types/domain";
-import { HighlightOnlyToggle } from "./HighlightOnlyToggle";
 import { TodoNoteTile } from "./TodoNoteTile";
 
 export function TodoSidebar({
@@ -29,14 +28,12 @@ export function TodoSidebar({
   onToggleHighlight: (id: string, isHighlighted: boolean) => void;
 }) {
   const [query, setQuery] = useState("");
-  const [highlightedOnly, setHighlightedOnly] = useState(false);
 
   const filteredNotes = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return notes
-      .filter((n) => !q || n.text.toLowerCase().includes(q))
-      .filter((n) => !highlightedOnly || n.is_highlighted);
-  }, [notes, query, highlightedOnly]);
+    if (!q) return notes;
+    return notes.filter((n) => n.text.toLowerCase().includes(q));
+  }, [notes, query]);
 
   return (
     <aside className="todo-sidebar">
@@ -48,16 +45,13 @@ export function TodoSidebar({
       </div>
 
       {notes.length > 0 && (
-        <div className="todo-search-row">
-          <input
-            type="text"
-            className="todo-search"
-            placeholder="Search tasks…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <HighlightOnlyToggle active={highlightedOnly} onToggle={() => setHighlightedOnly((v) => !v)} />
-        </div>
+        <input
+          type="text"
+          className="todo-search"
+          placeholder="Search tasks…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
       )}
 
       {notes.length === 0 ? (

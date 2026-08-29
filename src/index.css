@@ -437,14 +437,8 @@ a {
   padding: 6px 14px;
 }
 
-.todo-search-row {
-  display: flex;
-  gap: 8px;
-}
-
 .todo-search {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 .todo-empty {
@@ -517,17 +511,6 @@ a {
 
 .todo-tile-done:active {
   box-shadow: 1px 1px 0 var(--border);
-}
-
-.highlight-only-toggle {
-  padding: 6px 10px;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.highlight-only-toggle--active {
-  background: var(--accent);
-  color: var(--accent-text);
 }
 
 .todo-tile-highlight {
@@ -641,11 +624,6 @@ a {
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
-
-.global-search-filter-row {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .global-search-empty {
@@ -918,16 +896,9 @@ a.friend-list-username:hover {
   background: var(--accent);
 }
 
-.history-search-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
 .history-search {
-  flex: 1;
-  min-width: 0;
-  margin-bottom: 0;
+  width: 100%;
+  margin-bottom: 12px;
 }
 
 .history-list {
