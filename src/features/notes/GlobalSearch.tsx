@@ -6,6 +6,7 @@ import { useUncompleteNote } from "../../hooks/useUncompleteNote";
 import { useUserSettings } from "../../hooks/useUserSettings";
 import { useWeeks } from "../../hooks/useWeeks";
 import { isWeekArchived } from "../../lib/dates";
+import { HighlightOnlyToggle } from "./HighlightOnlyToggle";
 
 export function GlobalSearch() {
   const { notes } = useSearchNotes();
@@ -15,6 +16,7 @@ export function GlobalSearch() {
   const uncompleteNote = useUncompleteNote();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [highlightedOnly, setHighlightedOnly] = useState(false);
 
   const weeksById = useMemo(
     () => new Map(weeksQuery.data?.map((w) => [w.id, w]) ?? []),
@@ -24,8 +26,11 @@ export function GlobalSearch() {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return notes.filter((n) => n.text.toLowerCase().includes(q)).slice(0, 20);
-  }, [notes, query]);
+    return notes
+      .filter((n) => n.text.toLowerCase().includes(q))
+      .filter((n) => !highlightedOnly || n.is_highlighted)
+      .slice(0, 20);
+  }, [notes, query, highlightedOnly]);
 
   function handleBlur(e: FocusEvent<HTMLDivElement>) {
     if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
@@ -51,6 +56,9 @@ export function GlobalSearch() {
 
       {showResults && (
         <div className="global-search-results">
+          <div className="global-search-filter-row">
+            <HighlightOnlyToggle active={highlightedOnly} onToggle={() => setHighlightedOnly((v) => !v)} />
+          </div>
           {results.length === 0 ? (
             <p className="global-search-empty">No matches</p>
           ) : (
