@@ -92,6 +92,10 @@ without needing a full `CompletionStats` object (see Client architecture).
   scene. That would need raycasting/pointer-event wiring in `NotesStack`/`StarsStack` that
   doesn't exist today — a materially bigger change than this feature warrants.
   *(Assumption — flag if in-scene toggling was the point.)*
+- **Highlighted-only filter**: a "★ Only" toggle (`HighlightOnlyToggle`), shared across the
+  to-do sidebar search, the History page search, and the global header search, that filters the
+  visible list to highlighted notes only. Client-side filter over data already in scope — no new
+  query/hook.
 
 ### 4. Highlight rendering in the 3D stack
 
@@ -165,7 +169,6 @@ without needing a full `CompletionStats` object (see Client architecture).
 - Streak freeze/grace periods, or streak-loss notifications.
 - Heatmap windows longer than ~12 months, month-by-month pagination/navigation of the heatmap,
   or a heatmap on any page besides History.
-- Filtering the to-do sidebar or History list by highlighted status.
 - Any highlight-related change to the Friends stack view (a friend's highlighted notes are not
   specifically called out — `get_friend_stack` already excludes everything except id/week/color/
   position/completed_at, and this spec doesn't ask to extend it).

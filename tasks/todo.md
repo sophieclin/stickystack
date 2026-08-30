@@ -65,6 +65,13 @@ starting the highlight track.
 - [ ] Verify: un-highlight removes glow; repeated toggling doesn't drift — not confirmed yet
 - [x] `npm run build && npm run lint` clean
 
+**Scope addition (post-Phase-4):** ★-only filter (`HighlightOnlyToggle`) added to the to-do
+sidebar search, History page search, and global header search — not in the original SPEC.md,
+now documented there under "Highlighting a note".
+- [x] `HighlightOnlyToggle.tsx` + wiring in `GlobalSearch.tsx`/`TodoSidebar.tsx`/`HistoryPage.tsx`
+- [ ] Verify: toggling ★ Only in each of the three search boxes actually filters to highlighted
+      notes only, and un-toggling restores the full list — not yet eyeballed in a browser
+
 **Checkpoint:** demo full highlight lifecycle (sidebar → done → glow in both visual modes →
 un-highlight) before starting Phase 5.
 
