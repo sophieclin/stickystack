@@ -77,6 +77,8 @@ un-highlight) before starting Phase 5.
 
 ## Phase 5 — Docs, final walkthrough
 
-- [ ] Add "Streaks & highlights" section to `CLAUDE.md` Architecture notes
-- [ ] Full walkthrough against every SPEC.md acceptance criterion in one pass
-- [ ] `npm run build && npm run lint` clean on the final diff
+- [x] Add "Streaks & highlights" section to `CLAUDE.md` Architecture notes
+- [ ] Full walkthrough against every SPEC.md acceptance criterion in one pass — **blocked: needs
+      migration `0007` applied to the live Supabase project + a browser to eyeball it in, neither
+      available this session**
+- [x] `npm run build && npm run lint` clean on the final diff

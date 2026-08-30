@@ -111,6 +111,33 @@ declared with `type`, not `interface` — deliberately, because `@supabase/postg
 `.insert()`/`.update()` generic inference collapses to `never` against `interface`-declared
 `Row` shapes in `types/database.types.ts`.
 
+### Streaks & highlights
+
+Streak math lives entirely in `lib/completionStats.ts`: `computeStreakDays(notes: Note[])` (the
+"current streak" used by both `StackPage`'s header badge and `HistoryPage`'s "Day streak" tile)
+and `longestStreak` (scanned over the full completion history, independent of the 12-month
+heatmap window) are exported from the same module so there's exactly one definition of
+"consecutive calendar days with a completion," reused rather than re-derived per surface.
+`lib/streakHeatmap.ts`'s `computeHeatmapDays` builds the trailing-12-month, zero-gap day list the
+heatmap grid renders from, bucketing each day's count into an intensity level relative to the
+window's max.
+
+`notes.is_highlighted` needed no RLS change — the existing "update own notes" policy already
+covers updating any column on a caller's own row, unlike Friends' cross-user reads. There are
+three places a note's highlight can be toggled: `TodoNoteTile` (to-do sidebar), `HistoryPage`'s
+row list (done notes — a done note otherwise only exists as a 3D mesh, never DOM), and the ★-only
+filter (`HighlightOnlyToggle`, shared across the sidebar/History/global search boxes) which reads
+`is_highlighted` to filter the visible list rather than toggling it.
+
+The glow itself is a second mesh layered on top of the note, not a material property on the
+existing one, and the two visual modes use different techniques: `NoteMesh` adds a
+`meshBasicMaterial` plane with a ring alpha texture and additive blending; `StarMesh` adds a
+scaled-up `BackSide` duplicate of the star geometry with `depthTest={false}` so the glow reads
+through the jar's glass (`Jar.tsx`'s glass material never sets `depthWrite={false}`, so without
+disabling the depth test a highlighted star behind the glass fails its depth check and gets
+silently discarded). Because the mechanisms differ, a fix or visual check on one mode's glow
+doesn't carry over to the other's.
+
 ### Fonts
 
 Two separate font systems: `@fontsource/*` packages for ordinary CSS/HTML text, and self-hosted
