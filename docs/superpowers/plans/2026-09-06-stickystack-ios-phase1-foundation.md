@@ -39,6 +39,18 @@ hand-maintained — regenerate with `xcodegen generate` after editing `project.y
   source (github.com/supabase/supabase-swift) during planning, not guessed from
   memory — if a future task needs a call not covered here, verify it the same way
   before writing it.
+- Every injectable service protocol (`AuthServicing`, `WeeksServicing`,
+  `NotesServicing`) declares `: Sendable`. Each is called from an `@MainActor`
+  ViewModel's `async` functions on the existential (`any ...Servicing`) type, which
+  Swift 6 strict concurrency requires to be `Sendable` to cross that isolation
+  boundary — omitting it fails to compile with "non-Sendable type 'any ...Servicing'
+  cannot exit main actor-isolated context." Real implementations (structs wrapping
+  the already-`Sendable` `SupabaseClient`) auto-synthesize the conformance for free;
+  test fakes (mutable classes, driven single-threaded within one async test) declare
+  `@unchecked Sendable` with a one-line justifying comment — this is the accepted
+  Swift 6 idiom for test doubles, not a workaround for a real bug. Discovered and
+  verified (via a standalone `swiftc -swift-version 6 -strict-concurrency=complete`
+  repro) during Task 6's implementation; applied retroactively to Tasks 6, 9, 10, 11.
 
 ---
 
@@ -758,7 +770,11 @@ import Foundation
 import Supabase
 @testable import StickyStack
 
-final class FakeAuthService: AuthServicing {
+// `@unchecked Sendable`: this fake carries mutable `var` state (`currentSession`,
+// `continuation`, the call-recording arrays), but it's only ever driven single-threaded
+// within one async test method — never accessed concurrently — so the compiler's
+// inferred non-Sendability is a false positive here, not a real data race.
+final class FakeAuthService: AuthServicing, @unchecked Sendable {
     var currentSession: Session?
     private var continuation: AsyncStream<(AuthChangeEvent, Session?)>.Continuation?
     private(set) var signUpCalls: [(email: String, password: String, username: String)] = []
@@ -849,7 +865,13 @@ Expected: FAIL — `AuthServicing` / `AuthViewModel` don't exist yet.
 import Foundation
 import Supabase
 
-protocol AuthServicing {
+// `: Sendable` is required, not decorative: AuthViewModel is @MainActor and calls
+// `authService.currentSession`/`authStateChanges()` from inside a plain `Task { }` (which
+// inherits the MainActor's isolation) — under Swift 6 strict concurrency, crossing that
+// isolation boundary to call a non-actor-isolated protocol requirement on an existential
+// (`any AuthServicing`) requires the existential itself to be Sendable, or it fails to
+// compile with "non-Sendable type 'any AuthServicing' cannot exit main actor-isolated context."
+protocol AuthServicing: Sendable {
     var currentSession: Session? { get async }
     func authStateChanges() -> AsyncStream<(AuthChangeEvent, Session?)>
     func signUp(email: String, password: String, username: String) async throws
@@ -1249,7 +1271,11 @@ git commit -m "Wire RootView and app entry point to the auth flow"
 import Foundation
 import Supabase
 
-protocol WeeksServicing {
+// `: Sendable` required for the same reason as AuthServicing (Task 6): TodoListViewModel
+// is @MainActor and calls this protocol's methods from inside `async` functions whose
+// existential parameter (`any WeeksServicing`) must be Sendable to cross that isolation
+// boundary under Swift 6 strict concurrency.
+protocol WeeksServicing: Sendable {
     func fetchWeeks(userId: UUID) async throws -> [Week]
     func ensureCurrentWeek(userId: UUID, startDate: String) async throws
     func setColor(weekId: UUID, color: String) async throws
@@ -1336,7 +1362,8 @@ git commit -m "Add WeeksService"
 import Foundation
 import Supabase
 
-protocol NotesServicing {
+// `: Sendable` required for the same reason as AuthServicing (Task 6) / WeeksServicing (Task 9).
+protocol NotesServicing: Sendable {
     func fetchActiveNotes(weekIds: [UUID]) async throws -> [Note]
     func addNote(userId: UUID, weekId: UUID, text: String) async throws -> Note
     func setDone(noteId: UUID) async throws
@@ -1449,7 +1476,9 @@ git commit -m "Add NotesService"
 import Foundation
 @testable import StickyStack
 
-final class FakeWeeksService: WeeksServicing {
+// @unchecked Sendable: single-threaded test-double usage only, same justification as
+// FakeAuthService in Task 6.
+final class FakeWeeksService: WeeksServicing, @unchecked Sendable {
     var weeksToReturn: [Week] = []
     private(set) var ensureCurrentWeekCalls: [(userId: UUID, startDate: String)] = []
     private(set) var setColorCalls: [(weekId: UUID, color: String)] = []
@@ -1481,7 +1510,9 @@ final class FakeWeeksService: WeeksServicing {
 import Foundation
 @testable import StickyStack
 
-final class FakeNotesService: NotesServicing {
+// @unchecked Sendable: single-threaded test-double usage only, same justification as
+// FakeAuthService in Task 6.
+final class FakeNotesService: NotesServicing, @unchecked Sendable {
     var notesToReturn: [Note] = []
     private(set) var addedNotes: [(userId: UUID, weekId: UUID, text: String)] = []
     private(set) var doneNoteIds: [UUID] = []
