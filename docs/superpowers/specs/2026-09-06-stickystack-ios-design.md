@@ -34,7 +34,7 @@ carries forward on their behalf.
   reduced core-loop-only MVP.
 - **Pullout UI**: A bottom drawer/sheet (like Apple Maps), not a side drawer.
   Neobrutalist-styled: no blur/translucency, thick borders, hard offset shadows.
-- **Navigation**: A single corner menu button (not a persistent tab bar), since a
+- **Navigation**: A single top right corner menu button (not a persistent tab bar), since a
   tab bar would compete visually with the full-bleed 3D stack background.
 - **Data sync**: Refetch on mutation + pull-to-refresh, matching the web app's
   React Query invalidation pattern conceptually. No Supabase Realtime
