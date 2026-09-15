@@ -121,6 +121,17 @@ text + animation).
   badge and History screen.
 - Error handling: network/auth failures surface as an inline banner/toast per
   screen. No offline mode, no local write queue — matches the web app's scope.
+- **Auth captcha (Phase 2)**: the Supabase project has CAPTCHA protection
+  (Cloudflare Turnstile) enabled project-wide, so `signIn`/`signUp` are rejected
+  without a `captchaToken` — the web app gets one from its `Turnstile` widget
+  (`src/components/Turnstile.tsx`). There is no native Turnstile SDK, so iOS
+  embeds the widget in a `WKWebView` pointed at a small page hosted on the
+  deployed (Vercel) domain — Turnstile widgets are domain-locked, so a bundled
+  local HTML file won't verify — receives the token via a
+  `WKScriptMessageHandler`, and passes it through `AuthServicing` to
+  `client.auth.signIn(email:password:captchaToken:)` / `signUp(...captchaToken:)`.
+  Discovered during Phase 1's end-to-end check (login failed with a captcha
+  error); Phase 1 was verified with the dashboard toggle temporarily off.
 
 ## Neobrutalist visual system
 

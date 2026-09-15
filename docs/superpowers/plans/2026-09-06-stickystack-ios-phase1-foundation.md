@@ -52,6 +52,17 @@ hand-maintained — regenerate with `xcodegen generate` after editing `project.y
   verified (via a standalone `swiftc -swift-version 6 -strict-concurrency=complete`
   repro) during Task 6's implementation; applied retroactively to Tasks 6, 9, 10, 11.
 
+## Deferred to Phase 2: Turnstile captcha on auth
+
+Discovered at Task 12 Step 5: the Supabase project has CAPTCHA protection (Turnstile)
+enabled, and `SupabaseAuthService` sends no `captchaToken`, so sign-in/sign-up fail
+with a captcha error against the real project. Not fixable in this phase — Turnstile
+has no native SDK and needs a `WKWebView` against a page on the deployed domain (see
+the spec's "Auth captcha (Phase 2)" bullet under Data layer & sync). For Phase 1's
+manual verification, CAPTCHA protection was turned off temporarily in Supabase →
+Authentication → Attack Protection and turned back on afterward. Until Phase 2 lands,
+the iOS app cannot log in while that toggle is on.
+
 ---
 
 ### Task 1: Scaffold the Xcode project with XcodeGen
